@@ -1,0 +1,13 @@
+Livro FNAC;28;Credito
+Restaurante Ponto Encontro;25;Dinheiro
+Take Away Glovo;19;Credito
+Monitor Worten;85;Dinheiro
+Sapatilhas;58;Dinheiro
+Água;18;Dinheiro
+Camisola Pull & Bear;45;Dinheiro
+ração do gato;25;Credito
+Calça el Corte Inglês; 29;Credito
+Passe Transportes;25;Dinheiro
+Continente Norteshoping;28;Dinheiro
+Lidl Monte dos Burgos;32;Dinheiro
+Restaurante Picanha no Chão;35;Credito
