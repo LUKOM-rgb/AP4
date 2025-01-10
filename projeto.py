@@ -8,7 +8,7 @@ class jogostoreApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Games Store")
-        self.root.geometry("1440x1032")
+        self.root.geometry("1440x2000")
         self.root.configure(bg="#2C2C2C")
 
         # Lista de desejos
@@ -92,6 +92,22 @@ class jogostoreApp:
         for widget in self.jogo_display_frame.winfo_children():
             widget.destroy()
 
+        
+        canvas = tk.Canvas(self.jogo_display_frame, bg="#2C2C2C")
+        scroll_y = tk.Scrollbar(self.jogo_display_frame, orient="vertical", command=canvas.yview)
+        scroll_frame = Frame(canvas, bg="#2C2C2C")
+
+        scroll_frame.bind(
+        "<Configure>",
+        lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+         )
+
+        canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scroll_y.set)
+
+        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scroll_y.pack(side=tk.RIGHT, fill=tk.Y)
+        
         if not jogos:
             Label(self.jogo_display_frame, text="Não há jogos disponíveis", font=("Inter", 14), bg="#FFFFFF", fg="#FFFFFF").pack(pady=20)
             return
@@ -99,7 +115,7 @@ class jogostoreApp:
         row_frame = None
         for index, jogo in enumerate(jogos):
             if index % 4 == 0:  # Novo row_frame a cada 4 jogos
-                row_frame = Frame(self.jogo_display_frame, bg="#2C2C2C")
+                row_frame = Frame(scroll_frame, bg="#2C2C2C")
                 row_frame.pack(fill=tk.X, pady=10)
             self.create_card(row_frame, jogo)
 
