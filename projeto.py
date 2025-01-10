@@ -1,12 +1,14 @@
 import tkinter as tk
 from tkinter import messagebox, Frame, Label, Button
+from tkinter import Menu  # Para criar a barra de menus
 from PIL import Image, ImageTk  # Para trabalhar com imagens
+import subprocess
 
 class jogostoreApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Games Store")
-        self.root.geometry("800x600")
+        self.root.geometry("1440x1032")
         self.root.configure(bg="#2C2C2C")
 
         # Lista de desejos
@@ -14,28 +16,31 @@ class jogostoreApp:
 
         # Dados dos jogos, incluindo os caminhos das capas
         self.jogos_data = [
-            {"name": "Grand Theft Auto V", "Genero": "Ação", "Capa": "imagens/gta_v.png"},
-            {"name": "Ready or Not", "Genero": "Ação", "Capa": "imagens/ready_or_not.png"},
-            {"name": "Grand Theft Auto Online", "Genero": "Ação", "Capa": "imagens/gta_online.png"},
-            {"name": "Manor Lords", "Genero": "Simulação", "Capa": "imagens/manor_lords.png"},
-            {"name": "EAFC 25", "Genero": "Desporto", "Capa": "imagens/eafc_25.png"},
-            {"name": "Bus Simulator 21", "Genero": "Simulação", "Capa": "imagens/bus_simulator.png"},
-            {"name": "Minecraft", "Genero": "Aventura", "Capa": "imagens/minecraft.png"},
-            {"name": "Rainbow Six Siege", "Genero": "Ação", "Capa": "imagens/rainbow_six.png"}
+            {"name": "Grand Theft Auto V", "Genero": "Ação", "Capa": "imagens/gta.png"},
+            {"name": "The Crew", "Genero": "Simulação", "Capa": "imagens/Crew.jpg"},
+            {"name": "Grand Theft Auto Online", "Genero": "Ação", "Capa": "imagens/gta6.jpg"},
+            {"name": "Manor Lords", "Genero": "Simulação", "Capa": "imagens/lords.jpg"},
+            {"name": "EAFC 25", "Genero": "Desporto", "Capa": "imagens/fc_25.png"},
+            {"name": "Bus Simulator 21", "Genero": "Simulação", "Capa": "imagens/bus.jpg"},
+            {"name": "Minecraft", "Genero": "Aventura", "Capa": "imagens/mine.jpeg"},
+            {"name": "Rainbow Six Siege", "Genero": "Ação", "Capa": "imagens/R6.jpg"}
         ]
+
+        # Criar barra de menus
+        self.create_menu_bar()
 
         # Frame para filtros
         self.filter_frame = Frame(self.root, bg="#2C2C2C", width=150)
         self.filter_frame.pack(side=tk.RIGHT, fill=tk.Y)
 
-        Label(self.filter_frame, text="Filtros", bg="#2C2C2C", font=("Inter", 14, "bold"), fg="#2C2C2C").pack(pady=10)
+        Label(self.filter_frame, text="Filtros", bg="#2C2C2C", font=("Inter", 14, "bold"), fg="#E6C614").pack(pady=10)
 
-        # Adicionar filtros
+        # Adicionar filtros como labels interativos
         filtros = ["Ação", "Aventura", "Simulação", "Desporto", "todos"]
         for filtro in filtros:
-            Button(self.filter_frame, text=filtro.capitalize(), font=("Inter", 12), bg="#2C2C2C", fg="#FFFFFF", 
-                   activebackground="#2C2C2C", activeforeground="#2C2C2C",
-                   command=lambda g=filtro: self.filter_jogos(g)).pack(fill=tk.X, pady=5)
+            filtro_label = Label(self.filter_frame, text=filtro.capitalize(), font=("Inter", 12), bg="#2C2C2C", fg="#FFFFFF", cursor="hand2")
+            filtro_label.pack(fill=tk.X, pady=5)
+            filtro_label.bind("<Button-1>", lambda event, g=filtro: self.filter_jogos(g))
 
         # Botão para abrir lista de desejos
         Button(self.filter_frame, text="Lista de Desejos", font=("Inter", 12, "bold"), bg="#FFFFFF", fg="#2C2C2C",
@@ -46,6 +51,41 @@ class jogostoreApp:
         self.jogo_display_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
         self.display_jogos(self.jogos_data)
+
+    def create_menu_bar(self):
+        # Criar barra de menus
+        self.menu_bar = Menu(self.root)
+
+        # Menu Arquivo
+        file_menu = Menu(self.menu_bar, tearoff=0)
+        file_menu.add_command(label="Sign up", command=self.open_create_account)
+        file_menu.add_command(label="Abrir", command=self.abrir)
+        file_menu.add_separator()
+        file_menu.add_command(label="Sair", command=self.root.quit)
+        self.menu_bar.add_cascade(label="Arquivo", menu=file_menu)
+
+        # Menu Ajuda
+        help_menu = Menu(self.menu_bar, tearoff=0)
+        help_menu.add_command(label="Sobre", command=self.sobre)
+        self.menu_bar.add_cascade(label="Ajuda", menu=help_menu)
+
+        # Adicionar a barra de menus na janela principal
+        self.root.config(menu=self.menu_bar)
+
+    def open_create_account(self):
+        try:
+            subprocess.Popen(["python", "login.py"])
+        except FileNotFoundError:
+            messagebox.showerror("Erro", "O ficheiro 'login.py' não foi encontrado!")
+
+    def novo(self):
+        messagebox.showinfo("Novo", "Opção 'Novo' selecionada!")
+
+    def abrir(self):
+        messagebox.showinfo("Abrir", "Opção 'Abrir' selecionada!")
+
+    def sobre(self):
+        messagebox.showinfo("Sobre", "Games Store App v1.0\nDesenvolvido por [Seu Nome]")
 
     def display_jogos(self, jogos):
         # Limpar o frame de exibição
@@ -58,7 +98,7 @@ class jogostoreApp:
 
         row_frame = None
         for index, jogo in enumerate(jogos):
-            if index % 5 == 0:  # Novo row_frame a cada 5 jogos
+            if index % 4 == 0:  # Novo row_frame a cada 4 jogos
                 row_frame = Frame(self.jogo_display_frame, bg="#2C2C2C")
                 row_frame.pack(fill=tk.X, pady=10)
             self.create_card(row_frame, jogo)
@@ -70,7 +110,7 @@ class jogostoreApp:
         # Carregar imagem da capa
         try:
             img = Image.open(jogo["Capa"])
-            img = img.resize((100, 150))  # Redimensiona a capa
+            img = img.resize((230, 341))  # Redimensiona a capa
             photo = ImageTk.PhotoImage(img)
             img_label = Label(card_frame, image=photo, bg="white")
             img_label.image = photo  # Mantém uma referência para a imagem
@@ -125,7 +165,6 @@ class jogostoreApp:
             Filtro_jogos = [jogo for jogo in self.jogos_data if jogo["Genero"] == Genero]
 
         self.display_jogos(Filtro_jogos)
-
 
 if __name__ == "__main__":
     root = tk.Tk()
