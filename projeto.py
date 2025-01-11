@@ -3,6 +3,14 @@ from tkinter import messagebox, Frame, Label, Button
 from tkinter import Menu  # Para criar a barra de menus
 from PIL import Image, ImageTk  # Para trabalhar com imagens
 import subprocess
+from tkinter import font
+
+def get_font(family, size=12, weight="normal"):
+    available_fonts = font.families()
+    if family in available_fonts:
+        return font.Font(family=family, size=size, weight=weight)
+    return font.Font(family="Arial", size=size, weight=weight)
+
 
 class jogostoreApp:
     def __init__(self, root):
@@ -25,9 +33,11 @@ class jogostoreApp:
             {"name": "Minecraft", "Genero": "Aventura", "Capa": "imagens/mine.jpeg"},
             {"name": "Rainbow Six Siege", "Genero": "Ação", "Capa": "imagens/R6.jpg"}
         ]
+        inter_font = get_font("Inter", size=12)
 
+        
         # Criar barra de menus
-        self.create_menu_bar()
+        self.barra_menu()
 
         # Frame para filtros
         self.filter_frame = Frame(self.root, bg="#2C2C2C", width=150)
@@ -40,11 +50,11 @@ class jogostoreApp:
         for filtro in filtros:
             filtro_label = Label(self.filter_frame, text=filtro.capitalize(), font=("Inter", 12), bg="#2C2C2C", fg="#FFFFFF", cursor="hand2")
             filtro_label.pack(fill=tk.X, pady=5)
-            filtro_label.bind("<Button-1>", lambda event, g=filtro: self.filter_jogos(g))
+            filtro_label.bind("<Button-1>", lambda event, g=filtro: self.filtrar_jogos(g))
 
         # Botão para abrir lista de desejos
-        Button(self.filter_frame, text="Lista de Desejos", font=("Inter", 12, "bold"), bg="#FFFFFF", fg="#2C2C2C",
-               command=self.open_lista).pack(fill=tk.X, pady=20)
+        Button(self.filter_frame, text="Lista de Desejos", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF",
+               command=self.abrir_lista).pack(fill=tk.X, pady=20)
 
         # Frame para exibição de jogos
         self.jogo_display_frame = Frame(self.root, bg="#2C2C2C")
@@ -52,7 +62,7 @@ class jogostoreApp:
 
         self.display_jogos(self.jogos_data)
 
-    def create_menu_bar(self):
+    def barra_menu(self):
         # Criar barra de menus
         self.menu_bar = Menu(self.root)
 
@@ -117,9 +127,9 @@ class jogostoreApp:
             if index % 4 == 0:  # Novo row_frame a cada 4 jogos
                 row_frame = Frame(scroll_frame, bg="#2C2C2C")
                 row_frame.pack(fill=tk.X, pady=10)
-            self.create_card(row_frame, jogo)
+            self.Capa_jogos(row_frame, jogo)
 
-    def create_card(self, parent, jogo):
+    def Capa_jogos(self, parent, jogo):
         card_frame = Frame(parent, bg="#FFFFFF", relief="sunken", borderwidth=1, padx=10, pady=10)
         card_frame.pack(side=tk.LEFT, padx=10)
 
@@ -134,47 +144,64 @@ class jogostoreApp:
         except Exception:
             Label(card_frame, text="Capa não disponível", bg="white", font=("Inter", 10)).pack(pady=5)
 
-        Label(card_frame, text=jogo["name"], font=("Inter", 12, "bold"), bg="white").pack(pady=5)
+        Label(card_frame, text=jogo["name"], font=("Inter", 12, "bold",), bg="white").pack(pady=5)
 
-        Label(card_frame, text=f"Gênero: {jogo['Genero']}", font=("Inter", 10), bg="white").pack(pady=5)
 
-        Button(card_frame, text="Adicionar à lista", command=lambda g=jogo["name"]: self.add_to_lista(g)).pack(pady=5)
+        Button(card_frame, text="Adicionar à lista",bg="#E6C614", fg="#FFFFFF" , command=lambda g=jogo["name"]: self.adicionar_lista(g)).pack(pady=5)
 
-    def add_to_lista(self, jogo):
+    def adicionar_lista(self, jogo):
         if jogo not in self.lista:
             self.lista.append(jogo)
             messagebox.showinfo("Lista de desejos", f"{jogo} foi adicionado à sua lista de desejos!")
         else:
             messagebox.showinfo("Lista de desejos", f"{jogo} já está na sua lista de desejos!")
 
-    def open_lista(self):
+    def abrir_lista(self):
         lista_window = tk.Toplevel(self.root)
         lista_window.title("Lista de Desejos")
         lista_window.geometry("600x400")
         lista_window.configure(bg="#2C2C2C")
 
-        Label(lista_window, text="Sua Lista de Desejos", font=("Inter", 16, "bold"), bg="#2C2C2C", fg="#E6C614").pack(pady=10)
+        Label(lista_window, text="Sua Lista de Desejos", font=("Inter", 16, "bold"), 
+          bg="#2C2C2C", fg="#E6C614").pack(pady=10)
 
-        # Exibição dos itens da lista de desejos
+    # Exibição dos itens da lista de desejos
         for jogo in self.lista:
-            self.create_lista_card(lista_window, jogo)
+         self.criar_capa(lista_window, jogo)
 
-    def create_lista_card(self, parent, jogo_name):
+    # Botão "Remover Todos"
+        Button(lista_window, text="Remover Todos", bg="#FF0000", fg="#FFFFFF", 
+           command=lambda: self.Limpar_lista(lista_window)).pack(pady=10)
+    
+    def criar_capa(self, parent, jogo_name):
         card_frame = Frame(parent, bg="#FFFFFF", relief="sunken", borderwidth=1, padx=10, pady=10)
         card_frame.pack(pady=5, fill=tk.X)
 
         Label(card_frame, text=jogo_name, font=("Inter", 12, "bold"), bg="white").pack(side=tk.LEFT, padx=5)
 
-        remove_button = Button(card_frame, text="Remover", command=lambda g=jogo_name: self.remove_from_lista(g, card_frame))
+        remove_button = Button(card_frame, text="Remover", 
+                           command=lambda g=jogo_name: self.remover_da_lista(g, card_frame))
         remove_button.pack(side=tk.RIGHT, padx=5)
 
-    def remove_from_lista(self, jogo, frame):
+
+        Label(card_frame, text=jogo_name, font=("Inter", 12, "bold"), bg="white").pack(side=tk.LEFT, padx=5)
+
+        remove_button = Button(card_frame, text="Remover", command=lambda g=jogo_name: self.remover_da_lista(g, card_frame))
+        remove_button.pack(side=tk.RIGHT, padx=5)
+
+    def remover_da_lista(self, jogo, frame):
         if jogo in self.lista:
             self.lista.remove(jogo)
             frame.destroy()
             messagebox.showinfo("Lista", f"{jogo} foi removido da sua lista.")
 
-    def filter_jogos(self, Genero):
+    def Limpar_lista(self, lista_window):
+        self.lista.clear()
+        for widget in lista_window.winfo_children():
+            widget.destroy()
+        Label(lista_window, text="Sua Lista de Desejos está vazia.", bg="#2C2C2C", fg="#FFFFFF", font=("Inter", 12)).pack(pady=20)
+
+    def filtrar_jogos(self, Genero):
         if Genero == "todos":
             Filtro_jogos = self.jogos_data
         else:
