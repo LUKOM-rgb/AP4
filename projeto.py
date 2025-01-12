@@ -1,5 +1,6 @@
+import os
 import tkinter as tk
-from tkinter import messagebox, Frame, Label, Button
+from tkinter import messagebox, Frame, Label, Button, Menu
 from tkinter import Menu  # Para criar a barra de menus
 from PIL import Image, ImageTk  # Para trabalhar com imagens
 import subprocess
@@ -35,7 +36,7 @@ class jogostoreApp:
         ]
         inter_font = get_font("Inter", size=12)
 
-        
+
         # Criar barra de menus
         self.barra_menu()
 
@@ -102,7 +103,7 @@ class jogostoreApp:
         for widget in self.jogo_display_frame.winfo_children():
             widget.destroy()
 
-        
+
         canvas = tk.Canvas(self.jogo_display_frame, bg="#2C2C2C")
         scroll_y = tk.Scrollbar(self.jogo_display_frame, orient="vertical", command=canvas.yview)
         scroll_frame = Frame(canvas, bg="#2C2C2C")
@@ -117,7 +118,7 @@ class jogostoreApp:
 
         canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scroll_y.pack(side=tk.RIGHT, fill=tk.Y)
-        
+
         if not jogos:
             Label(self.jogo_display_frame, text="Não há jogos disponíveis", font=("Inter", 14), bg="#FFFFFF", fg="#FFFFFF").pack(pady=20)
             return
@@ -144,10 +145,26 @@ class jogostoreApp:
         except Exception:
             Label(card_frame, text="Capa não disponível", bg="white", font=("Inter", 10)).pack(pady=5)
 
-        Label(card_frame, text=jogo["name"], font=("Inter", 12, "bold",), bg="white").pack(pady=5)
+        Button(card_frame, text=jogo["name"], font=("Inter", 12, "bold",), bg="white", relief="raised",
+                command=lambda: self.abrir_jogo(jogo["name"])).pack(pady=5)
 
+        Label(card_frame, text=f"Genero: {jogo['Genero']}", font=("Helvetica", 10), bg="white").pack(pady=5)
+
+        buy_button = Button(card_frame, text="Adiciona à sua lista", command=lambda g=jogo["name"]: self.add_to_lista(g))
+        buy_button.pack(pady=5)
 
         Button(card_frame, text="Adicionar à lista",bg="#E6C614", fg="#FFFFFF" , command=lambda g=jogo["name"]: self.adicionar_lista(g)).pack(pady=5)
+
+    def abrir_jogo(self, jogo_name): # Tenta abrir o arquivo do jogo com o mesmo nome
+        print(f"A abrir: {jogo_name}") # print de debug
+        if os.path.exists(f"jogos/{jogo_name}"):
+            subprocess.Popen(["python", "jogo.py", jogo_name])  # Abre o ficheiro de python correspondente
+        else: # dar erro se a pasta nao existe
+            messagebox.showerror(
+                "Erro",
+                f"O jogo \"{jogo_name}\" não existe!"
+            )
+
 
     def adicionar_lista(self, jogo):
         if jogo not in self.lista:
@@ -162,7 +179,7 @@ class jogostoreApp:
         lista_window.geometry("600x400")
         lista_window.configure(bg="#2C2C2C")
 
-        Label(lista_window, text="Sua Lista de Desejos", font=("Inter", 16, "bold"), 
+        Label(lista_window, text="Sua Lista de Desejos", font=("Inter", 16, "bold"),
           bg="#2C2C2C", fg="#E6C614").pack(pady=10)
 
     # Exibição dos itens da lista de desejos
@@ -170,16 +187,16 @@ class jogostoreApp:
          self.criar_capa(lista_window, jogo)
 
     # Botão "Remover Todos"
-        Button(lista_window, text="Remover Todos", bg="#FF0000", fg="#FFFFFF", 
+        Button(lista_window, text="Remover Todos", bg="#FF0000", fg="#FFFFFF",
            command=lambda: self.Limpar_lista(lista_window)).pack(pady=10)
-    
+
     def criar_capa(self, parent, jogo_name):
         card_frame = Frame(parent, bg="#FFFFFF", relief="sunken", borderwidth=1, padx=10, pady=10)
         card_frame.pack(pady=5, fill=tk.X)
 
         Label(card_frame, text=jogo_name, font=("Inter", 12, "bold"), bg="white").pack(side=tk.LEFT, padx=5)
 
-        remove_button = Button(card_frame, text="Remover", 
+        remove_button = Button(card_frame, text="Remover",
                            command=lambda g=jogo_name: self.remover_da_lista(g, card_frame))
         remove_button.pack(side=tk.RIGHT, padx=5)
 
