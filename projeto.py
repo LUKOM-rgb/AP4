@@ -1,6 +1,6 @@
 import os
 import tkinter as tk
-from tkinter import messagebox, Frame, Label, Button, Menu
+from tkinter import messagebox, Frame, Label, Button
 from tkinter import Menu  # Para criar a barra de menus
 from PIL import Image, ImageTk  # Para trabalhar com imagens
 import subprocess
@@ -10,7 +10,7 @@ def get_font(family, size=12, weight="normal"):
     available_fonts = font.families()
     if family in available_fonts:
         return font.Font(family=family, size=size, weight=weight)
-    return font.Font(family="Arial", size=size, weight=weight)
+    return font.Font(family="Inter", size=size, weight=weight)
 
 
 class jogostoreApp:
@@ -25,17 +25,42 @@ class jogostoreApp:
 
         # Dados dos jogos, incluindo os caminhos das capas
         self.jogos_data = [
-            {"name": "Grand Theft Auto V", "Genero": "Ação", "Capa": "imagens/gta.png"},
-            {"name": "The Crew", "Genero": "Simulação", "Capa": "imagens/Crew.jpg"},
-            {"name": "Grand Theft Auto Online", "Genero": "Ação", "Capa": "imagens/gta6.jpg"},
-            {"name": "Manor Lords", "Genero": "Simulação", "Capa": "imagens/lords.jpg"},
-            {"name": "EAFC 25", "Genero": "Desporto", "Capa": "imagens/fc_25.png"},
-            {"name": "Bus Simulator 21", "Genero": "Simulação", "Capa": "imagens/bus.jpg"},
-            {"name": "Minecraft", "Genero": "Aventura", "Capa": "imagens/mine.jpeg"},
-            {"name": "Rainbow Six Siege", "Genero": "Ação", "Capa": "imagens/R6.jpg"}
+            {"name": "Grand Theft Auto V", "Género": "Ação", "Capa": "imagens/gta.png"},
+            {"name": "The Crew", "Género": "Simulação", "Capa": "imagens/Crew.jpg"},
+            {"name": "Grand Theft Auto VI", "Género": "Ação", "Capa": "imagens/gta6.jpg"},
+            {"name": "Manor Lords", "Género": "Simulação", "Capa": "imagens/lords.jpg"},
+            {"name": "EAFC 25", "Género": "Desporto", "Capa": "imagens/fc_25.png"},
+            {"name": "Bus Simulator 21", "Género": "Simulação", "Capa": "imagens/bus.jpg"},
+            {"name": "Minecraft", "Género": "Aventura", "Capa": "imagens/mine.jpeg"},
+            {"name": "Rainbow Six Siege", "Género": "Ação", "Capa": "imagens/R6.jpg"}
         ]
-        inter_font = get_font("Inter", size=12)
 
+        # Descrição
+        self.dicas_descr = {
+            "Grand Theft Auto V": "Explore a cidade de Los Santos e complete missões emocionantes.",
+            "The Crew": "Junte-se a outros jogadores e participe de corridas num mundo aberto.",
+            "Grand Theft Auto VI": "BREVEMENTE",
+            "Manor Lords": "Construa e gerencie a sua própria cidade medieval.",
+            "EAFC 25": "Participe de partidas emocionantes e conquiste o campeonato.",
+            "Bus Simulator 21": "Conduza um autocarro numa cidade realista e cumpra horários.",
+            "Minecraft": "Explore, construa e sobreviva num mundo de blocos.",
+            "Rainbow Six Siege": "Participe de intensas batalhas táticas em equipe."
+        }
+
+        # Dicas para os jogos
+        self.asdicas_dados = {
+            "Grand Theft Auto V": ["1# Aumente seu Dinheiro Facilmente (Modo História)", 
+"Invista no Mercado de Ações:* - Complete as missões de assassinato do Lester estrategicamente:", "Participe de atividades online."],
+            "The Crew": ["Junte-se a outros jogadores.", "Participe de corridas num mundo aberto.", "Personalize seu carro."],
+            "Grand Theft Auto VI": ["Entre no modo online.", "Jogue com amigos.", "Complete missões em equipe."],
+            "Manor Lords": ["Construa sua própria cidade.", "Gerencie recursos.", "Participe de batalhas."],
+            "EAFC 25": ["Participe de partidas emocionantes.", "Conquiste o campeonato.", "Jogue com amigos."],
+            "Bus Simulator 21": ["Conduza um autocarro numa cidade realista.", "Cumpra horários .", "Explore diferentes rotas."],
+            "Minecraft": ["Explore o mundo de blocos.", "Construa estruturas incríveis.", "Sobreviva a criaturas."],
+            "Rainbow Six Siege": ["Participe de batalhas táticas.", "Trabalhe em equipe.", "Use estratégias para vencer."]
+        }
+
+        inter_font = get_font("Inter", size=12)
 
         # Criar barra de menus
         self.barra_menu()
@@ -56,6 +81,10 @@ class jogostoreApp:
         # Botão para abrir lista de desejos
         Button(self.filter_frame, text="Lista de Desejos", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF",
                command=self.abrir_lista).pack(fill=tk.X, pady=20)
+
+        # Botão para abrir dicas
+        Button(self.filter_frame, text="Dicas", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF",
+               command=self.abrir_dicas).pack(fill=tk.X, pady=20)
 
         # Frame para exibição de jogos
         self.jogo_display_frame = Frame(self.root, bg="#2C2C2C")
@@ -108,10 +137,7 @@ class jogostoreApp:
         scroll_y = tk.Scrollbar(self.jogo_display_frame, orient="vertical", command=canvas.yview)
         scroll_frame = Frame(canvas, bg="#2C2C2C")
 
-        scroll_frame.bind(
-        "<Configure>",
-        lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
-         )
+        scroll_frame.bind( "<Configure>",lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
 
         canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
         canvas.configure(yscrollcommand=scroll_y.set)
@@ -148,12 +174,60 @@ class jogostoreApp:
         Button(card_frame, text=jogo["name"], font=("Inter", 12, "bold",), bg="white", relief="raised",
                 command=lambda: self.abrir_jogo(jogo["name"])).pack(pady=5)
 
-        Label(card_frame, text=f"Genero: {jogo['Genero']}", font=("Helvetica", 10), bg="white").pack(pady=5)
-
-        buy_button = Button(card_frame, text="Adiciona à sua lista", command=lambda g=jogo["name"]: self.add_to_lista(g))
-        buy_button.pack(pady=5)
+        Label(card_frame, text=f"Género: {jogo['Género']}", font=("Helvetica", 10), bg="white").pack(pady=5)
 
         Button(card_frame, text="Adicionar à lista",bg="#E6C614", fg="#FFFFFF" , command=lambda g=jogo["name"]: self.adicionar_lista(g)).pack(pady=5)
+
+
+    def ver_dicas(self, jogo_name):
+        dicas = self.asdicas_dados.get(jogo_name, ["Sem dicas disponíveis."] * 3)
+        dicas_window = tk.Toplevel(self.root)
+        dicas_window.title(f"Dicas para {jogo_name}")
+        dicas_window.geometry("1440x2000")
+        dicas_window.configure(bg="#2C2C2C")
+
+        # Frame para exibir dicas
+        dicas_frame = Frame(dicas_window, bg="#2C2C2C")
+        dicas_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        # Exibir dicas
+        for dica in dicas:
+            Label(dicas_frame, text=dica, font=("Inter", 12), bg="#2C2C2C", fg="#FFFFFF").pack(pady=5)
+
+        # Carregar imagem do jogo
+        try:
+            img = Image.open(next(jogo for jogo in self.jogos_data if jogo["name"] == jogo_name)["Capa"])
+            img = img.resize((300, 400))  # Redimensiona a imagem
+            photo = ImageTk.PhotoImage(img)
+            img_label = Label(dicas_window, image=photo, bg="#2C2C2C")
+            img_label.image = photo  # Mantém uma referência para a imagem
+            img_label.pack(side=tk.RIGHT, padx=20)
+        except Exception:
+            Label(dicas_window, text="Imagem não disponível", bg="#2C2C2C", font=("Inter", 10), fg="#FFFFFF").pack(side=tk.RIGHT, padx=20)
+
+
+    def abrir_dicas(self):
+        lista_window = tk.Toplevel(self.root)
+        lista_window.title("Dicas")
+        lista_window.geometry("1440x2000")
+        lista_window.configure(bg="#2C2C2C")
+
+        Label(lista_window, text="DICAS", font=("Inter", 16, "bold"), 
+              bg="#2C2C2C", fg="#E6C614").pack(pady=10)
+
+        # Exibição das dicas para cada jogo
+        for jogo in self.jogos_data:
+            jogo_name = jogo["name"]
+            dica = self.dicas_descr.get(jogo_name, "Sem dicas disponíveis.")
+            self.criar_capa_dica(lista_window, jogo_name, dica)
+
+    def criar_capa_dica(self, parent, jogo_name, dica):
+        card_frame = Frame(parent, bg="#FFFFFF", relief="sunken", borderwidth=1, padx=10, pady=10)
+        card_frame.pack(pady=5, fill=tk.X)
+
+        Label(card_frame, text=jogo_name, font=("Inter", 15, "bold"), bg="white").pack(side=tk.LEFT, padx=5)
+        Label(card_frame, text=dica, font=("Inter", 14), bg="white").pack(side=tk.LEFT, padx=5)
+        Button(card_frame, text="Ver dicas", bg="#E6C614", fg="#FFFFFF", command=lambda: self.ver_dicas(jogo_name)).pack(side=tk.RIGHT, padx=5)
 
     def abrir_jogo(self, jogo_name): # Tenta abrir o arquivo do jogo com o mesmo nome
         print(f"A abrir: {jogo_name}") # print de debug
@@ -200,12 +274,6 @@ class jogostoreApp:
                            command=lambda g=jogo_name: self.remover_da_lista(g, card_frame))
         remove_button.pack(side=tk.RIGHT, padx=5)
 
-
-        Label(card_frame, text=jogo_name, font=("Inter", 12, "bold"), bg="white").pack(side=tk.LEFT, padx=5)
-
-        remove_button = Button(card_frame, text="Remover", command=lambda g=jogo_name: self.remover_da_lista(g, card_frame))
-        remove_button.pack(side=tk.RIGHT, padx=5)
-
     def remover_da_lista(self, jogo, frame):
         if jogo in self.lista:
             self.lista.remove(jogo)
@@ -218,11 +286,11 @@ class jogostoreApp:
             widget.destroy()
         Label(lista_window, text="Sua Lista de Desejos está vazia.", bg="#2C2C2C", fg="#FFFFFF", font=("Inter", 12)).pack(pady=20)
 
-    def filtrar_jogos(self, Genero):
-        if Genero == "todos":
+    def filtrar_jogos(self, Género):
+        if Género == "todos":
             Filtro_jogos = self.jogos_data
         else:
-            Filtro_jogos = [jogo for jogo in self.jogos_data if jogo["Genero"] == Genero]
+            Filtro_jogos = [jogo for jogo in self.jogos_data if jogo["Género"] == Género]
 
         self.display_jogos(Filtro_jogos)
 
