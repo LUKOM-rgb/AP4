@@ -43,6 +43,19 @@ def criar_conta():
         messagebox.showerror("Erro", "Por favor, preencha todos os campos.")
         return
 
+    ### VALIDAÇÕES ###
+    if "\\" in username or "|" in username:
+        messagebox.showerror("Erro", "O nome de utilizador não pode conter '\\' ou '|'.")
+        return
+
+    if "\\" in email or "|" in email:
+        messagebox.showerror("Erro", "O e-mail não pode conter '\\' ou '|'.")
+        return
+
+    if "\\" in password or "|" in password:
+        messagebox.showerror("Erro", "A senha não pode conter '\\' ou '|'.")
+        return
+
     ### DATA VÁLIDA? ###
 
     # cada 4 anos é bissexto
@@ -92,27 +105,17 @@ def criar_conta():
         messagebox.showerror("Erro", "As passwords não coincidem.")
         return
 
-    # ter a certeza que os dados são guardados bem
-    def specialchars(value,separator="|"):
-        value = value.replace("\\", "\\\\") #trocar "\" por "\\" para não haver problemas
-        return value.replace(separator, f"\\{separator}") #também trocar "|" por "\|" para não haver problemas
-
-    username_fix = specialchars(username)
-    email_fix = specialchars(email)
-    password_fix = specialchars(password)
-
     # Guardar os dados num ficheiro txt
-    #
     try:
-        with open("utilizadores.txt", "a", encoding="utf-8") as file: #
-            file.write(f"\n{username_fix}|{email_fix}|{dia}|{mes}|{ano}|{password_fix}")
+        with open("utilizadores.txt", "a", encoding="utf-8") as file:
+            file.write(f"\n{username}|{email}|{dia}|{mes}|{ano}|{password}")
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao guardar os dados: {e}")
         return
 
     # Simular sucesso na criação de conta
     messagebox.showinfo("Sucesso", f"Conta criada para {username} com sucesso!")
-    subprocess.Popen(["python", "projeto.py"])
+    subprocess.Popen(["python", "login.py"])
     app.destroy()
 
 # Função para abrir a janela de login e fechar a atual
@@ -146,7 +149,7 @@ label_dataN.pack(pady=5)
 frame_dataN = CTkFrame(app, fg_color="transparent")
 frame_dataN.pack(pady=5)
 
-entry_diaN = CTkEntry(frame_dataN, width=80, placeholder_text="DIA", font=("Inter", 15)) 
+entry_diaN = CTkEntry(frame_dataN, width=80, placeholder_text="DIA", font=("Inter", 15))
 entry_diaN.grid(row=0, column=0, padx=5)
 
 entry_mesN = CTkEntry(frame_dataN, width=80, placeholder_text="MÊS", font=("Inter", 15))
