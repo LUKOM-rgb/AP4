@@ -99,7 +99,7 @@ class jogostoreApp:
     # Menu Arquivo
         file_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF")  # Cor personalizada para o submenu
         file_menu.add_command(label="Sign up", command=self.open_create_account)
-        file_menu.add_command(label="Abrir", command=self.abrir)
+        file_menu.add_command(label="Home", command=self.home)
         file_menu.add_separator()
         file_menu.add_command(label="Sair", command=self.root.quit)
         self.menu_bar.add_cascade(label="Arquivo", menu=file_menu)
@@ -121,8 +121,12 @@ class jogostoreApp:
     def novo(self):
         messagebox.showinfo("Novo", "Opção 'Novo' selecionada!")
 
-    def abrir(self):
-        messagebox.showinfo("Abrir", "Opção 'Abrir' selecionada!")
+    def home(self):
+        try:
+            subprocess.Popen(["python", "Main.py"])
+            self.root.destroy()
+        except FileNotFoundError:
+            messagebox.showerror("Erro", "O ficheiro 'projeto.py'ncontrado!")
 
     def sobre(self):
         messagebox.showinfo("Sobre", "Games Store App v1.0\nDesenvolvido por [Seu Nome]")
