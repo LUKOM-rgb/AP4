@@ -11,7 +11,7 @@ app.configure(fg_color="#2C2C2C")
 label_title = CTkLabel(app, text="OLÁ GAMER", font=("Inter", 30), text_color="white")
 label_title.pack(pady=20)  # Adiciona o label à interface
 
-label_username = CTkLabel(app, text="Nome de Utilizador:", font=("Arial", 15), text_color="white")
+label_username = CTkLabel(app, text="Nome de Utilizador:", font=("Inter", 15), text_color="white")
 label_username.pack(pady=5)  # Adiciona o label à interface
 
 entry_username = CTkEntry(app, width=300, placeholder_text="nome de utilizador ou email", font=("Inter", 15))
@@ -43,6 +43,8 @@ def login():
 
             if password == saved_password and (username == saved_username or username == saved_email):
                 messagebox.showinfo("Sucesso", "Login efetuado com sucesso!")
+                with open("logged_as.txt", "w", encoding="utf-8") as file:
+                    file.write(f"{user_data[0]}|{user_data[1]}|{user_data[2]}|{user_data[3]}|{user_data[4]}|{user_data[5]}")
                 subprocess.Popen(["python", "projeto.py"])
                 app.destroy()
                 return
@@ -65,7 +67,7 @@ def open_create_account():
         messagebox.showerror("Erro", "O ficheiro 'criar_conta.py' não foi encontrado!")
 
 # Criar um label clicável
-label_create_account = CTkLabel(app, text="Não tem uma conta? Crie uma!", font=("Arial", 12), text_color="white")
+label_create_account = CTkLabel(app, text="Não tem uma conta? Crie uma!", font=("Inter", 12), text_color="white")
 label_create_account.pack(pady=10)
 
 # Tornar a parte "Crie uma!" clicável

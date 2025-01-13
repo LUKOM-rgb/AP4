@@ -49,7 +49,7 @@ class jogostoreApp:
 
         # Dicas para os jogos
         self.asdicas_dados = {
-            "Grand Theft Auto V": ["1# Aumente seu Dinheiro Facilmente (Modo História)", 
+            "Grand Theft Auto V": ["1# Aumente seu Dinheiro Facilmente (Modo História)",
 "Invista no Mercado de Ações:* - Complete as missões de assassinato do Lester estrategicamente:", "Participe de atividades online."],
             "The Crew": ["Junte-se a outros jogadores.", "Participe de corridas num mundo aberto.", "Personalize seu carro."],
             "Grand Theft Auto VI": ["Entre no modo online.", "Jogue com amigos.", "Complete missões em equipe."],
@@ -63,8 +63,8 @@ class jogostoreApp:
         inter_font = get_font("Inter", size=12)
 
         self.barra_menu()
-        
-        
+
+
         # Frame para filtros
         self.filter_frame = Frame(self.root, bg="#2C2C2C", width=150)
         self.filter_frame.pack(side=tk.RIGHT, fill=tk.Y)
@@ -100,6 +100,7 @@ class jogostoreApp:
         file_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF")  # Cor personalizada para o submenu
         file_menu.add_command(label="Sign up", command=self.open_create_account)
         file_menu.add_command(label="Abrir", command=self.abrir)
+        file_menu.add_command(label="Definições", command=self.settings)
         file_menu.add_separator()
         file_menu.add_command(label="Sair", command=self.root.quit)
         self.menu_bar.add_cascade(label="Arquivo", menu=file_menu)
@@ -122,7 +123,10 @@ class jogostoreApp:
         messagebox.showinfo("Novo", "Opção 'Novo' selecionada!")
 
     def abrir(self):
-        messagebox.showinfo("Abrir", "Opção 'Abrir' selecionada!")
+        messagebox.showinfo("Novo", "Opção 'Abrir' selecionada!")
+
+    def settings(self):
+        subprocess.Popen(["python", "settings.py"])  # Abre o ficheiro de python correspondente
 
     def sobre(self):
         messagebox.showinfo("Sobre", "Games Store App v1.0\nDesenvolvido por [Seu Nome]")
@@ -225,7 +229,7 @@ class jogostoreApp:
         lista_window.geometry("1920x1080")
         lista_window.configure(bg="#2C2C2C")
 
-        Label(lista_window, text="DICAS", font=("Inter", 16, "bold"), 
+        Label(lista_window, text="DICAS", font=("Inter", 16, "bold"),
               bg="#2C2C2C", fg="#E6C614").pack(pady=10)
 
         # Exibição das dicas para cada jogo
