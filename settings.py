@@ -70,7 +70,7 @@ def mudar_email():
     entry_new_email.pack(pady=10)
 
     # Botão para guardar o novo email
-    button_save_email = CTkButton(popup, text="Guardar", command=save_new_email, font=("Inter", 15))
+    button_save_email = CTkButton(popup, text="Guardar", command=save_new_email, font=("Inter", 15), fg_color="#E6C614", text_color="black",hover_color="#776500")
     button_save_email.pack(pady=20)
 
 
@@ -138,7 +138,7 @@ def mudar_senha():
     entry_confirm_password.pack(pady=10)
 
     # Botão para guardar a nova senha
-    button_save_password = CTkButton(popup, text="Guardar", command=save_new_password, font=("Inter", 15))
+    button_save_password = CTkButton(popup, text="Guardar", command=save_new_password, font=("Inter", 15), fg_color="#E6C614", text_color="black",hover_color="#776500")
     button_save_password.pack(pady=20)
 
 try:
@@ -172,11 +172,11 @@ label_dataN = CTkLabel(app, text=f"Data de Nascimento: {dataFormato}", font=("In
 label_dataN.pack(pady=5)
 
 # Botão para abrir popup de alteração de email
-button_change_email = CTkButton(app, text="Mudar E-mail", command=mudar_email, font=("Inter", 15))
+button_change_email = CTkButton(app, text="Mudar E-mail", command=mudar_email, font=("Inter", 15), fg_color="#E6C614", text_color="black",hover_color="#776500")
 button_change_email.pack(pady=20)
 
 # Botão para abrir popup de alteração de senha
-button_change_password = CTkButton(app, text="Mudar Senha", command=mudar_senha, font=("Inter", 15))
+button_change_password = CTkButton(app, text="Mudar Senha", command=mudar_senha, font=("Inter", 15), fg_color="#E6C614", text_color="black",hover_color="#776500")
 button_change_password.pack(pady=20)
 
 app.mainloop()
