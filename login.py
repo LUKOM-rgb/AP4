@@ -14,13 +14,13 @@ label_title.pack(pady=20)  # Adiciona o label à interface
 label_username = CTkLabel(app, text="Nome de Utilizador:", font=("Arial", 15), text_color="white")
 label_username.pack(pady=5)  # Adiciona o label à interface
 
-entry_username = CTkEntry(app, width=300, placeholder_text="Digite o seu nome de utilizador", font=("Inter", 15))
+entry_username = CTkEntry(app, width=300, placeholder_text="nome de utilizador ou email", font=("Inter", 15))
 entry_username.pack(pady=5)  # Adiciona o entry à interface
 
 label_password = CTkLabel(app, text="Password:", font=("Inter", 15), text_color="white")
 label_password.pack(pady=5)  # Adiciona o label à interface
 
-entry_password = CTkEntry(app, width=300, placeholder_text="Digite a sua senha", font=("Inter", 15), show="*")
+entry_password = CTkEntry(app, width=300, placeholder_text="senha", font=("Inter", 15), show="*")
 entry_password.pack(pady=5)  # Adiciona o entry à interface
 
 # Função para verificar login
@@ -29,24 +29,22 @@ def login():
     password = entry_password.get()
 
     try:
-        with open("utilizadores.txt", "r") as file:
+        with open("utilizadores.txt", "r", encoding="utf-8") as file:
             dados = file.readlines()
 
-        # Verificar se o nome de utilizador e senha correspondem
+        #verificar se o nome de utilizador e senha correspondem
         for line in dados:
             user_data = line.strip().split("|") #dividir
+            print(f"{user_data}")
 
-            def unspecialchars(value, separator="|"):
-                        value = value.replace(f"\\{separator}", separator)#reverter o separador
-                        return value.replace("\\\\", "\\")#reverter as barras
+            saved_username =user_data[0].strip() #nome de utilizador
+            saved_email = user_data[1].strip() #email para quem quiser entrar com isso
+            saved_password = user_data[5].strip() #senha
 
-            saved_username = unspecialchars(user_data[0].strip()) #o nome de utilizador é a primeira parte dos dados
-            saved_password = unspecialchars(user_data[5].strip()) #a senha está na sexta posição
-            print(f"username: {saved_username}")
-            print(f"password: {saved_username}")
-
-            if username == saved_username and password == saved_password:
+            if password == saved_password and (username == saved_username or username == saved_email):
                 messagebox.showinfo("Sucesso", "Login efetuado com sucesso!")
+                subprocess.Popen(["python", "projeto.py"])
+                app.destroy()
                 return
 
         messagebox.showerror("Erro", "Nome de utilizador ou senha incorretos.")

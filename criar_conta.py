@@ -16,7 +16,7 @@ def get_font(family, size=12, weight="normal"):
         return font.Font(family=family, size=size, weight=weight)
     return font.Font(family="Inter", size=size, weight=weight)
 
-# Função para criar a conta
+# função para criar a conta
 def criar_conta():
     username = entry_username.get().strip()
     email = entry_email.get().strip()
@@ -38,7 +38,7 @@ def criar_conta():
     password = entry_password.get()
     repetir_password = entry_RepetirPassword.get()
 
-    # Verificar se todos os campos foram preenchidos
+    # verificar se todos os campos foram preenchidos
     if not username or not email or not dia or not mes or not ano or not password or not repetir_password:
         messagebox.showerror("Erro", "Por favor, preencha todos os campos.")
         return
@@ -77,14 +77,14 @@ def criar_conta():
         return
 
     if mes == 2 and ((bissexto and dia > 29) or (not bissexto and dia > 28)): # dia maior que o fevereiro deixa? erro
-        messagebox.showerror("Erro", "Data Impossível")
+        messagebox.showerror("Erro", "este fevereiro não tem tantos dias.")
         return
 
-    if ano >= datetime.now().year or ano <= datetime.now().year-120:  # Verifica se o valor é um inteiro ou um número de ponto flutuante
+    if ano >= datetime.now().year or ano <= datetime.now().year-120:  # verificar se o ano faz sentido (ninguém pode entrar se estiver impossivelmente novo ou velho)
         messagebox.showerror("Erro", f"{ano} não é um ano válido")
         return
 
-    # Verificar se as passwords coincidem
+    # verificar se as passwords coincidem
 
     #print(password)
     #print(repetir_password)
@@ -95,20 +95,38 @@ def criar_conta():
     ### email VÁLIDO? ###
 
     arroba_pos = email.find("@")
-    ponto_pos = email.find(".", arroba_pos)  # O ponto deve vir após o "@"
+    ponto_pos = email.find(".", arroba_pos)  # o ponto deve vir após o "@"
     #print(ponto_pos)
 
-    if arroba_pos == -1:
-        messagebox.showerror("Erro", "As passwords não coincidem.")
-        return
-    if ponto_pos == -1 or ponto_pos < arroba_pos:
-        messagebox.showerror("Erro", "As passwords não coincidem.")
+    # se não houver nada antes do arroba, erro
+    # se não houver ponto ou arroba, erro
+    # se houver pontos atrás do arroba, erro
+    # se não houver nada entre o arroba e o ponto, erro
+    # se o email acabar com ponto, erro
+    if arroba_pos == 0 or arroba_pos == -1 or ponto_pos == -1 or ponto_pos < arroba_pos or ponto_pos == (arroba_pos + 1) or email.endswith("."):
+        messagebox.showerror("Erro", "Email inválido.")
         return
 
     # Guardar os dados num ficheiro txt
     try:
+        with open("utilizadores.txt", "r", encoding="utf-8") as file:
+            dados = file.readlines()
+            # Verificar se o nome de utilizador e senha correspondem
+            for line in dados:
+                user_data = line.strip().split("|") #dividir
+
+                userCheck = user_data[0].strip()
+                emailCheck = user_data[1].strip()
+
+                if username == userCheck:
+                    messagebox.showerror("Erro", "Utilizador com esse nome já existe!")
+                    return
+                if email == emailCheck:
+                    messagebox.showerror("Erro", "Utilizador com esse e-mail já existe!")
+                    return
+
         with open("utilizadores.txt", "a", encoding="utf-8") as file:
-            file.write(f"\n{username}|{email}|{dia}|{mes}|{ano}|{password}")
+            file.write(f"{username}|{email}|{dia}|{mes}|{ano}|{password}\n")
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao guardar os dados: {e}")
         return
