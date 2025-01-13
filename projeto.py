@@ -50,7 +50,7 @@ class jogostoreApp:
         # Dicas para os jogos
         self.asdicas_dados = {
             "Grand Theft Auto V": ["1# Aumente seu Dinheiro Facilmente (Modo História)", 
-"Invista no Mercado de Ações:* - Complete as missões de assassinato do Lester estrategicamente:", "Participe de atividades online."],
+            "Invista no Mercado de Ações:* - Complete as missões de assassinato do Lester estrategicamente:", "Participe de atividades online."],
             "The Crew": ["Junte-se a outros jogadores.", "Participe de corridas num mundo aberto.", "Personalize seu carro."],
             "Grand Theft Auto VI": ["Entre no modo online.", "Jogue com amigos.", "Complete missões em equipe."],
             "Manor Lords": ["Construa sua própria cidade.", "Gerencie recursos.", "Participe de batalhas."],
@@ -62,9 +62,9 @@ class jogostoreApp:
 
         inter_font = get_font("Inter", size=12)
 
-        # Criar barra de menus
         self.barra_menu()
-
+        
+        
         # Frame para filtros
         self.filter_frame = Frame(self.root, bg="#2C2C2C", width=150)
         self.filter_frame.pack(side=tk.RIGHT, fill=tk.Y)
@@ -93,23 +93,23 @@ class jogostoreApp:
         self.display_jogos(self.jogos_data)
 
     def barra_menu(self):
-        # Criar barra de menus
-        self.menu_bar = Menu(self.root)
+    # Criar barra de menus com cor personalizada
+        self.menu_bar = Menu(self.root, bg="#E6C614", fg="#FFFFFF")  # Cor de fundo e texto
 
-        # Menu Arquivo
-        file_menu = Menu(self.menu_bar, tearoff=0)
+    # Menu Arquivo
+        file_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF")  # Cor personalizada para o submenu
         file_menu.add_command(label="Sign up", command=self.open_create_account)
         file_menu.add_command(label="Abrir", command=self.abrir)
         file_menu.add_separator()
         file_menu.add_command(label="Sair", command=self.root.quit)
         self.menu_bar.add_cascade(label="Arquivo", menu=file_menu)
 
-        # Menu Ajuda
-        help_menu = Menu(self.menu_bar, tearoff=0)
+    # Menu Ajuda
+        help_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF")
         help_menu.add_command(label="Sobre", command=self.sobre)
         self.menu_bar.add_cascade(label="Ajuda", menu=help_menu)
 
-        # Adicionar a barra de menus na janela principal
+    # Adicionar a barra de menus na janela principal
         self.root.config(menu=self.menu_bar)
 
     def open_create_account(self):
