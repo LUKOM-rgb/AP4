@@ -151,9 +151,9 @@ class jogostoreApp:
 
         row_frame = None
         for index, jogo in enumerate(jogos):
-            if index % 4 == 0:  # Novo row_frame a cada 4 jogos
+            if index % 6 == 0:  # Novo row_frame a cada 4 jogos
                 row_frame = Frame(scroll_frame, bg="#2C2C2C")
-                row_frame.pack(fill=tk.X, pady=10)
+                row_frame.pack(fill=tk.X, pady=10,)
             self.Capa_jogos(row_frame, jogo)
 
     def Capa_jogos(self, parent, jogo):
