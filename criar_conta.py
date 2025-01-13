@@ -103,7 +103,8 @@ def criar_conta():
     # se houver pontos atrás do arroba, erro
     # se não houver nada entre o arroba e o ponto, erro
     # se o email acabar com ponto, erro
-    if arroba_pos == 0 or arroba_pos == -1 or ponto_pos == -1 or ponto_pos < arroba_pos or ponto_pos == (arroba_pos + 1) or email.endswith("."):
+    # se tiver mais que um arroba, erro
+    if arroba_pos == 0 or arroba_pos == -1 or ponto_pos == -1 or ponto_pos < arroba_pos or ponto_pos == (arroba_pos + 1) or email.endswith(".") or email.count("@") != 1:
         messagebox.showerror("Erro", "Email inválido.")
         return
 
