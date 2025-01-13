@@ -17,7 +17,7 @@ class jogostoreApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Games Store")
-        self.root.geometry("1440x2000")
+        self.root.geometry("1920x1080")
         self.root.configure(bg="#2C2C2C")
 
         # Lista de desejos
@@ -45,19 +45,6 @@ class jogostoreApp:
             "Bus Simulator 21": "Conduza um autocarro numa cidade realista e cumpra horários.",
             "Minecraft": "Explore, construa e sobreviva num mundo de blocos.",
             "Rainbow Six Siege": "Participe de intensas batalhas táticas em equipe."
-        }
-
-        # Dicas para os jogos
-        self.asdicas_dados = {
-            "Grand Theft Auto V": ["1# Aumente seu Dinheiro Facilmente (Modo História)", 
-"Invista no Mercado de Ações:* - Complete as missões de assassinato do Lester estrategicamente:", "Participe de atividades online."],
-            "The Crew": ["Junte-se a outros jogadores.", "Participe de corridas num mundo aberto.", "Personalize seu carro."],
-            "Grand Theft Auto VI": ["Entre no modo online.", "Jogue com amigos.", "Complete missões em equipe."],
-            "Manor Lords": ["Construa sua própria cidade.", "Gerencie recursos.", "Participe de batalhas."],
-            "EAFC 25": ["Participe de partidas emocionantes.", "Conquiste o campeonato.", "Jogue com amigos."],
-            "Bus Simulator 21": ["Conduza um autocarro numa cidade realista.", "Cumpra horários .", "Explore diferentes rotas."],
-            "Minecraft": ["Explore o mundo de blocos.", "Construa estruturas incríveis.", "Sobreviva a criaturas."],
-            "Rainbow Six Siege": ["Participe de batalhas táticas.", "Trabalhe em equipe.", "Use estratégias para vencer."]
         }
 
         inter_font = get_font("Inter", size=12)
@@ -178,38 +165,51 @@ class jogostoreApp:
 
         Button(card_frame, text="Adicionar à lista",bg="#E6C614", fg="#FFFFFF" , command=lambda g=jogo["name"]: self.adicionar_lista(g)).pack(pady=5)
 
-
     def ver_dicas(self, jogo_name):
-        dicas = self.asdicas_dados.get(jogo_name, ["Sem dicas disponíveis."] * 3)
+        # Criar a janela de dicas
         dicas_window = tk.Toplevel(self.root)
         dicas_window.title(f"Dicas para {jogo_name}")
-        dicas_window.geometry("1440x2000")
+        dicas_window.geometry("1920x1080")
         dicas_window.configure(bg="#2C2C2C")
 
-        # Frame para exibir dicas
-        dicas_frame = Frame(dicas_window, bg="#2C2C2C")
-        dicas_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        # Frame esquerdo para as dicas
+        left_frame = Frame(dicas_window, bg="#2C2C2C")
+        left_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-        # Exibir dicas
-        for dica in dicas:
-            Label(dicas_frame, text=dica, font=("Inter", 12), bg="#2C2C2C", fg="#FFFFFF").pack(pady=5)
+        Label(left_frame, text="DICAS", font=("Inter", 16, "bold"), bg="#2C2C2C", fg="#E6C614").pack(pady=10)
 
-        # Carregar imagem do jogo
+        # Exibir dicas específicas do jogo
+        with open("dicas.txt", "r", encoding="utf-8") as file:
+            dicas = file.read()
+        # Separar o conteúdo por jogos
+        jogos_dicas = dicas.split("!")
+        for jogo_dicas in jogos_dicas:
+            if jogo_name in jogo_dicas:
+                dicas_texto = jogo_dicas.strip().replace(f"{jogo_name}\n", "")
+                Label(left_frame, text=dicas_texto, font=("Inter", 12), bg="#2C2C2C", fg="#FFFFFF", justify="left", wraplength=1100).pack(anchor="w", pady=5)
+
+        # Frame direito para exibição da imagem
+        right_frame = Frame(dicas_window, bg="#2C2C2C")
+        right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # Carregar e exibir a imagem do jogo
         try:
-            img = Image.open(next(jogo for jogo in self.jogos_data if jogo["name"] == jogo_name)["Capa"])
-            img = img.resize((300, 400))  # Redimensiona a imagem
+            jogo = next(j for j in self.jogos_data if j["name"] == jogo_name)
+            img = Image.open(jogo["Capa"])
+            img = img.resize((300, 500))  # Ajustar tamanho da imagem
             photo = ImageTk.PhotoImage(img)
-            img_label = Label(dicas_window, image=photo, bg="#2C2C2C")
-            img_label.image = photo  # Mantém uma referência para a imagem
-            img_label.pack(side=tk.RIGHT, padx=20)
-        except Exception:
-            Label(dicas_window, text="Imagem não disponível", bg="#2C2C2C", font=("Inter", 10), fg="#FFFFFF").pack(side=tk.RIGHT, padx=20)
+            img_label = Label(right_frame, image=photo, bg="#2C2C2C")
+            img_label.image = photo
+            img_label.pack(pady=10)
+        except StopIteration:
+            Label(right_frame, text="Imagem não disponível", font=("Inter", 14), bg="#2C2C2C", fg="#E6C614").pack(pady=10)
 
+        dicas_window.mainloop()
 
     def abrir_dicas(self):
         lista_window = tk.Toplevel(self.root)
         lista_window.title("Dicas")
-        lista_window.geometry("1440x2000")
+        lista_window.geometry("1920x1080")
         lista_window.configure(bg="#2C2C2C")
 
         Label(lista_window, text="DICAS", font=("Inter", 16, "bold"), 
