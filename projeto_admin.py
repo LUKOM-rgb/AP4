@@ -302,7 +302,7 @@ class jogostoreApp:
             with open("utilizadores.txt", "r", encoding="utf-8") as file:
                 contas = file.readlines()
 
-            # Verificar se o usuário está na lista
+            # Verificar se o utilizador está na lista
             user_found = False
             for conta in contas:
                 user_data = conta.strip().split("|")
@@ -314,19 +314,34 @@ class jogostoreApp:
                 messagebox.showerror("Erro", "Utilizador não encontrado.")
                 return
 
-            # Remover a conta
-            with open("utilizadores.txt", "w", encoding="utf-8") as file:
-                for conta in contas:
-                    user_data = conta.strip().split("|")
-                    if user_data[0].strip() != username_to_remove:
-                        file.write(conta)  # Escrever de volta apenas as contas que não são a removida
-
-            messagebox.showinfo("Sucesso", f"Conta '{username_to_remove}' removida com sucesso!")
-
         except FileNotFoundError:
-            messagebox.showerror("Erro", "O arquivo 'utilizadores.txt' não foi encontrado!")
+            messagebox.showerror("Erro", "O ficheiro 'utilizadores.txt' não foi encontrado!")
+            return
         except Exception as e:
-            messagebox.showerror("Erro", f"Erro ao remover a conta: {e}")
+            messagebox.showerror("Erro", f"Erro ao aceder ao ficheiro: {e}")
+            return
+
+        # Perguntar confirmação
+        confirmar = messagebox.askyesno(
+            "Confirmação",
+            f"Tem a certeza de que deseja remover a conta '{username_to_remove}'?"
+        )
+        if not confirmar:
+            return
+        else:
+    # Remover a conta
+            try:
+                with open("utilizadores.txt", "w", encoding="utf-8") as file:
+                    for conta in contas:
+                        user_data = conta.strip().split("|")
+                        if user_data[0].strip() != username_to_remove:
+                            file.write(conta)  # Escrever de volta apenas as contas que não são a removida
+
+                messagebox.showinfo("Sucesso", f"Conta '{username_to_remove}' removida com sucesso!")
+
+            except Exception as e:
+                messagebox.showerror("Erro", f"Erro ao remover a conta: {e}")
+
 
     def adicionar_jogo(self):
         # Coletar dados do jogo
