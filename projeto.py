@@ -49,19 +49,6 @@ class jogostoreApp:
             "Rainbow Six Siege": "Participe de intensas batalhas táticas em equipe."
         }
 
-        # Dicas para os jogos
-        self.asdicas_dados = {
-            "Grand Theft Auto V": ["1# Aumente seu Dinheiro Facilmente (Modo História)",
-"Invista no Mercado de Ações:* - Complete as missões de assassinato do Lester estrategicamente:", "Participe de atividades online."],
-            "The Crew": ["Junte-se a outros jogadores.", "Participe de corridas num mundo aberto.", "Personalize seu carro."],
-            "Grand Theft Auto VI": ["Entre no modo online.", "Jogue com amigos.", "Complete missões em equipe."],
-            "Manor Lords": ["Construa sua própria cidade.", "Gerencie recursos.", "Participe de batalhas."],
-            "EAFC 25": ["Participe de partidas emocionantes.", "Conquiste o campeonato.", "Jogue com amigos."],
-            "Bus Simulator 21": ["Conduza um autocarro numa cidade realista.", "Cumpra horários .", "Explore diferentes rotas."],
-            "Minecraft": ["Explore o mundo de blocos.", "Construa estruturas incríveis.", "Sobreviva a criaturas."],
-            "Rainbow Six Siege": ["Participe de batalhas táticas.", "Trabalhe em equipe.", "Use estratégias para vencer."]
-        }
-
         inter_font = get_font("Inter", size=12)
 
         self.barra_menu()
@@ -273,7 +260,7 @@ class jogostoreApp:
             )
 
 
-    def exibir_notificacao():
+    def exibir_notificacao(self):
         notification = Notification(
             app_id="Games Store",
             title="Jogo Adicionado",
@@ -284,8 +271,7 @@ class jogostoreApp:
     def adicionar_lista(self, jogo):
         if jogo not in self.lista:
             self.lista.append(jogo)
-            self.exibir_notificacao()
-            messagebox.showinfo("Lista de desejos", f"{jogo} foi adicionado!")
+            self.exibir_notificacao()  # Chama a função de notificação corretamente
         else:
             messagebox.showinfo("Lista de desejos", f"{jogo} já está na lista!")
     
