@@ -124,7 +124,6 @@ class jogostoreApp:
     def utilizador(self):
         try:
             subprocess.Popen(["python", "settings.py"])
-            root.destroy()
         except FileNotFoundError:
             print("Erro ao abrir o arquivo 'settings.py'")
 
@@ -274,8 +273,8 @@ class jogostoreApp:
             self.exibir_notificacao()  # Chama a função de notificação corretamente
         else:
             messagebox.showinfo("Lista de desejos", f"{jogo} já está na lista!")
-    
-    
+
+
 
     def abrir_lista(self):
         lista_window = tk.Toplevel(self.root)

@@ -152,13 +152,13 @@ label_title.pack(pady=20)
 label_username = CTkLabel(app, text="Nome de Utilizador:", font=("Inter", 15), text_color="white")
 label_username.pack(pady=5)
 
-entry_username = CTkEntry(app, width=300, placeholder_text="Digite o seu nome de utilizador", font=("Inter", 15))
+entry_username = CTkEntry(app, width=300, placeholder_text="Introduza o seu nome de utilizador", font=("Inter", 15))
 entry_username.pack(pady=5)
 
 label_email = CTkLabel(app, text="Endereço de E-mail:", font=("Inter", 15), text_color="white")
 label_email.pack(pady=5)
 
-entry_email = CTkEntry(app, width=300, placeholder_text="Digite o seu e-mail", font=("Inter", 15))
+entry_email = CTkEntry(app, width=300, placeholder_text="Introduza o seu e-mail", font=("Inter", 15))
 entry_email.pack(pady=5)
 
 label_dataN = CTkLabel(app, text="Data de Nascimento:", font=("Inter", 15), text_color="white")
@@ -180,13 +180,13 @@ entry_anoN.grid(row=0, column=4, padx=5)
 label_password = CTkLabel(app, text="Password:", font=("Inter", 15), text_color="white")
 label_password.pack(pady=5)
 
-entry_password = CTkEntry(app, width=300, placeholder_text="Digite a sua senha", font=("Inter", 15), show="*")
+entry_password = CTkEntry(app, width=300, placeholder_text="Introduza a sua senha", font=("Inter", 15), show="*")
 entry_password.pack(pady=5)
 
 label_RepetirPassword = CTkLabel(app, text="Repita Password:", font=("Inter", 15), text_color="white")
 label_RepetirPassword.pack(pady=5)
 
-entry_RepetirPassword = CTkEntry(app, width=300, placeholder_text="Digite outra vez a sua senha", font=("Inter", 15), show="*")
+entry_RepetirPassword = CTkEntry(app, width=300, placeholder_text="Introduza outra vez a sua senha", font=("Inter", 15), show="*")
 entry_RepetirPassword.pack(pady=5)
 
 # Botão para criar conta
