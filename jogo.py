@@ -98,6 +98,43 @@ reviews = carregar_reviews(f"jogos/{jogo_name}/reviews.txt")
 for review in reviews:
     review_label = tk.Label(reviews_frame, text=review, font=("Inter", 12), bg="black", fg="white", anchor="w")
     review_label.pack(anchor="w")
+# Adicione esta função no arquivo jogo.py
+
+def adicionar_review(jogo_name):
+    review_window = tk.Toplevel()
+    review_window.title(f"Adicionar Review para {jogo_name}")
+    review_window.geometry("400x300")
+
+    label = tk.Label(review_window, text="Digite sua review:")
+    label.pack(pady=10)
+
+    entry_review = tk.Entry(review_window, width=50)
+    entry_review.pack(pady=10)
+
+    def salvar_review():
+        review_text = entry_review.get()
+        if review_text:
+            # Salvar a review no arquivo de reviews
+            with open(f"jogos/{jogo_name}/reviews.txt", "a", encoding="utf-8") as file:
+                file.write(f"{user_data[0]};{review_text}\n")  # user_data[0] é o nome do utilizador
+            messagebox.showinfo("Sucesso", "Review adicionada com sucesso!")
+            review_window.destroy()
+        else:
+            messagebox.showerror("Erro", "A review não pode estar vazia.")
+
+    button_salvar = tk.Button(review_window, text="Salvar Review", command=salvar_review)
+    button_salvar.pack(pady=20)
+    
+try:
+    with open("logged_as.txt", "r", encoding="utf-8") as file:
+        dados = file.readlines()
+
+    # Verificar se o nome de utilizador e senha correspondem
+    for line in dados:
+        user_data = line.strip().split("|")  # Dividir
+        print(f"{user_data}")
+except FileNotFoundError:
+    messagebox.showerror("COMO???", "Não tem sessão iniciada!")
 
 # Rodar a aplicação
 root.mainloop()

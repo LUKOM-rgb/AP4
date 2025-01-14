@@ -430,15 +430,32 @@ class jogostoreApp:
         Button(lista_window, text="Remover Todos", bg="#FF0000", fg="#FFFFFF",
            command=lambda: self.Limpar_lista(lista_window)).pack(pady=10)
 
-    def criar_capa(self, parent, jogo_name):
+    def Capa_jogos(self, parent, jogo):
         card_frame = Frame(parent, bg="#FFFFFF", relief="sunken", borderwidth=1, padx=10, pady=10)
-        card_frame.pack(pady=5, fill=tk.X)
+        card_frame.pack(side=tk.LEFT, padx=10)
 
-        Label(card_frame, text=jogo_name, font=("Inter", 12, "bold"), bg="white").pack(side=tk.LEFT, padx=5)
+        # Carregar imagem da capa
+        try:
+            img = Image.open(jogo["Capa"])
+            img = img.resize((230, 341))  # Redimensiona a capa
+            photo = ImageTk.PhotoImage(img)
+            img_label = Label(card_frame, image=photo, bg="white")
+            img_label.image = photo  # Mantém uma referência para a imagem
+            img_label.pack(pady=5)
+        except Exception:
+            Label(card_frame, text="Capa não disponível", bg="white", font=("Inter", 10)).pack(pady=5)
 
-        remove_button = Button(card_frame, text="Remover",
-                           command=lambda g=jogo_name: self.remover_da_lista(g, card_frame))
-        remove_button.pack(side=tk.RIGHT, padx=5)
+        Button(card_frame, text=jogo["name"], font=("Inter", 12, "bold",), bg="white", relief="raised",
+                command=lambda: self.abrir_jogo(jogo["name"])).pack(pady=5)
+
+        Label(card_frame, text=f"Género: {jogo['Género']}", font=("Helvetica", 10), bg="white").pack(pady=5)
+
+        Button(card_frame, text="Adicionar à lista", bg="#E6C614", fg="#FFFFFF", 
+            command=lambda g=jogo["name"]: self.adicionar_lista(g)).pack(pady=5)
+
+        # Botão para adicionar review
+        Button(card_frame, text="Adicionar Review", bg="#E6C614", fg="#FFFFFF", 
+            command=lambda g=jogo["name"]: adicionar_review(g)).pack(pady=5)
 
     def remover_da_lista(self, jogo, frame):
         if jogo in self.lista:
