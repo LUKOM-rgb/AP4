@@ -132,7 +132,7 @@ class jogostoreApp:
     def sobre(self):
         messagebox.showinfo("Sobre", "Games Store App v1.0\nDesenvolvido por [Seu Nome]")
 
-    def utilizador():
+    def utilizador(self):
         try:
             subprocess.Popen(["python", "settings.py"])
             root.destroy()
