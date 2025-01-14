@@ -40,6 +40,11 @@ def login():
             saved_username =user_data[0].strip() #nome de utilizador
             saved_email = user_data[1].strip() #email para quem quiser entrar com isso
             saved_password = user_data[5].strip() #senha
+            
+            if username == "admin" and password=="12345":
+                messagebox.showinfo("Sucesso", "Login efetuado como admin!")
+                subprocess.Popen(["python", "projeto_admin.py"])
+                app.destroy()
 
             if password == saved_password and (username == saved_username or username == saved_email):
                 messagebox.showinfo("Sucesso", "Login efetuado com sucesso!")
