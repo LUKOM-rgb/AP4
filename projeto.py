@@ -5,6 +5,8 @@ from tkinter import Menu  # Para criar a barra de menus
 from PIL import Image, ImageTk  # Para trabalhar com imagens
 import subprocess
 from tkinter import font
+from winotify import Notification
+
 
 def get_font(family, size=12, weight="normal"):
     available_fonts = font.families()
@@ -163,7 +165,7 @@ class jogostoreApp:
 
         row_frame = None
         for index, jogo in enumerate(jogos):
-            if index % 6 == 0:  # Novo row_frame a cada 4 jogos
+            if index % 6 == 0:  # Novo row_frame a cada 6 jogos
                 row_frame = Frame(scroll_frame, bg="#2C2C2C")
                 row_frame.pack(fill=tk.X, pady=10,)
             self.Capa_jogos(row_frame, jogo)
@@ -188,7 +190,13 @@ class jogostoreApp:
 
         Label(card_frame, text=f"Género: {jogo['Género']}", font=("Helvetica", 10), bg="white").pack(pady=5)
 
-        Button(card_frame, text="Adicionar à lista",bg="#E6C614", fg="#FFFFFF" , command=lambda g=jogo["name"]: self.adicionar_lista(g)).pack(pady=5)
+        Button(
+    card_frame,
+    text="Adicionar à lista",
+    bg="#E6C614",
+    fg="#FFFFFF",
+    command=lambda g=jogo["name"]: self.adicionar_lista(g)
+).pack(pady=5)
 
     def ver_dicas(self, jogo_name):
         # Criar a janela de dicas
@@ -265,12 +273,23 @@ class jogostoreApp:
             )
 
 
+    def exibir_notificacao():
+        notification = Notification(
+            app_id="Games Store",
+            title="Jogo Adicionado",
+            msg="Você adicionou um jogo à sua lista de desejos!"
+        )
+        notification.show()
+
     def adicionar_lista(self, jogo):
         if jogo not in self.lista:
             self.lista.append(jogo)
-            messagebox.showinfo("Lista de desejos", f"{jogo} foi adicionado à sua lista de desejos!")
+            self.exibir_notificacao()
+            messagebox.showinfo("Lista de desejos", f"{jogo} foi adicionado!")
         else:
-            messagebox.showinfo("Lista de desejos", f"{jogo} já está na sua lista de desejos!")
+            messagebox.showinfo("Lista de desejos", f"{jogo} já está na lista!")
+    
+    
 
     def abrir_lista(self):
         lista_window = tk.Toplevel(self.root)
