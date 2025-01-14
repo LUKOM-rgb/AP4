@@ -92,15 +92,16 @@ class jogostoreApp:
     # Menu Arquivo
         file_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF")  # Cor personalizada para o submenu
         file_menu.add_command(label="Sign up", command=self.open_create_account)
-        file_menu.add_command(label="Abrir", command=self.abrir)
+        file_menu.add_command(label="Home", command=self.home)
         file_menu.add_separator()
         file_menu.add_command(label="Sair", command=self.root.quit)
         self.menu_bar.add_cascade(label="Arquivo", menu=file_menu)
 
     # Menu Ajuda
         help_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF")
+        help_menu.add_command(label="Utilizador", command=self.utilizador)
         help_menu.add_command(label="Sobre", command=self.sobre)
-        self.menu_bar.add_cascade(label="Ajuda", menu=help_menu)
+        self.menu_bar.add_cascade(label="Definições", menu=help_menu)
 
     # Adicionar a barra de menus na janela principal
         self.root.config(menu=self.menu_bar)
@@ -114,11 +115,22 @@ class jogostoreApp:
     def novo(self):
         messagebox.showinfo("Novo", "Opção 'Novo' selecionada!")
 
-    def abrir(self):
-        messagebox.showinfo("Abrir", "Opção 'Abrir' selecionada!")
+    def home(self):
+        try:
+            subprocess.Popen(["python", "Main.py"])
+            root.destroy()
+        except FileNotFoundError:
+            print("Erro ao abrir o arquivo 'Main.py'")
 
     def sobre(self):
         messagebox.showinfo("Sobre", "Games Store App v1.0\nDesenvolvido por [Seu Nome]")
+
+    def utilizador(self):
+        try:
+            subprocess.Popen(["python", "settings.py"])
+            root.destroy()
+        except FileNotFoundError:
+            print("Erro ao abrir o arquivo 'settings.py'")
 
     def display_jogos(self, jogos):
         # Limpar o frame de exibição

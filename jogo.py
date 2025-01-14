@@ -13,7 +13,7 @@ else:
 # Configurações principais
 root = Tk()
 root.title(f"{jogo_name}")
-root.geometry("950x600")
+root.geometry("1920x1080")
 root.configure(bg="#2C2C2C")
 
 # Frame principal

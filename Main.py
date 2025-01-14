@@ -6,7 +6,7 @@ import subprocess
 def create_interface():
     root = tk.Tk()
     root.title("Game Store")
-    root.geometry("1440x1032")
+    root.geometry("1920x1080")
     root.configure(bg="#1a1a1a")
 
     # Barra de Menu
@@ -23,8 +23,9 @@ def create_interface():
 
         # Menu Ajuda
         help_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF")
+        help_menu.add_command(label="Utilizador", command=utilizador)
         help_menu.add_command(label="Sobre", command=sobre)
-        menu_bar.add_cascade(label="Ajuda", menu=help_menu)
+        menu_bar.add_cascade(label="Definições", menu=help_menu)
 
         # Adicionar a barra de menus na janela principal
         root.config(menu=menu_bar)
@@ -47,6 +48,14 @@ def create_interface():
     # Função para exibir o sobre
     def sobre():
         print("Sobre a aplicação Game Store")
+
+    def utilizador():
+        try:
+            subprocess.Popen(["python", "settings.py"])
+            root.destroy()
+        except FileNotFoundError:
+            print("Erro ao abrir o arquivo 'settings.py'")
+
 
     barra_menu()
 
