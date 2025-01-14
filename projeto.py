@@ -5,6 +5,8 @@ from tkinter import Menu  # Para criar a barra de menus
 from PIL import Image, ImageTk  # Para trabalhar com imagens
 import subprocess
 from tkinter import font
+from winotify import Notification
+
 
 def get_font(family, size=12, weight="normal"):
     available_fonts = font.families()
@@ -163,7 +165,7 @@ class jogostoreApp:
 
         row_frame = None
         for index, jogo in enumerate(jogos):
-            if index % 6 == 0:  # Novo row_frame a cada 4 jogos
+            if index % 6 == 0:  # Novo row_frame a cada 6 jogos
                 row_frame = Frame(scroll_frame, bg="#2C2C2C")
                 row_frame.pack(fill=tk.X, pady=10,)
             self.Capa_jogos(row_frame, jogo)
@@ -265,12 +267,22 @@ class jogostoreApp:
             )
 
 
+    def exibir_notificacao():
+        notification = Notification(app_id="Código Python", title="Notificação", msg="Você clicou no botão!")
+        notification.show()
+
+    # Outra função que será chamada
     def adicionar_lista(self, jogo):
         if jogo not in self.lista:
             self.lista.append(jogo)
             messagebox.showinfo("Lista de desejos", f"{jogo} foi adicionado à sua lista de desejos!")
         else:
             messagebox.showinfo("Lista de desejos", f"{jogo} já está na sua lista de desejos!")
+
+# Função que chama as duas
+    def executar_funcoes(exibir_notificacao,adicionar_lista):
+        exibir_notificacao()
+        adicionar_lista()
 
     def abrir_lista(self):
         lista_window = tk.Toplevel(self.root)
