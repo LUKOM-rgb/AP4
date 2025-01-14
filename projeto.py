@@ -190,7 +190,13 @@ class jogostoreApp:
 
         Label(card_frame, text=f"Género: {jogo['Género']}", font=("Helvetica", 10), bg="white").pack(pady=5)
 
-        Button(card_frame, text="Adicionar à lista",bg="#E6C614", fg="#FFFFFF" , command=lambda g=jogo["name"]: self.adicionar_lista(g)).pack(pady=5)
+        Button(
+    card_frame,
+    text="Adicionar à lista",
+    bg="#E6C614",
+    fg="#FFFFFF",
+    command=lambda g=jogo["name"]: self.adicionar_lista(g)
+).pack(pady=5)
 
     def ver_dicas(self, jogo_name):
         # Criar a janela de dicas
@@ -268,21 +274,22 @@ class jogostoreApp:
 
 
     def exibir_notificacao():
-        notification = Notification(app_id="Código Python", title="Notificação", msg="Você clicou no botão!")
+        notification = Notification(
+            app_id="Games Store",
+            title="Jogo Adicionado",
+            msg="Você adicionou um jogo à sua lista de desejos!"
+        )
         notification.show()
 
-    # Outra função que será chamada
     def adicionar_lista(self, jogo):
         if jogo not in self.lista:
             self.lista.append(jogo)
-            messagebox.showinfo("Lista de desejos", f"{jogo} foi adicionado à sua lista de desejos!")
+            self.exibir_notificacao()
+            messagebox.showinfo("Lista de desejos", f"{jogo} foi adicionado!")
         else:
-            messagebox.showinfo("Lista de desejos", f"{jogo} já está na sua lista de desejos!")
-
-# Função que chama as duas
-    def executar_funcoes(exibir_notificacao,adicionar_lista):
-        exibir_notificacao()
-        adicionar_lista()
+            messagebox.showinfo("Lista de desejos", f"{jogo} já está na lista!")
+    
+    
 
     def abrir_lista(self):
         lista_window = tk.Toplevel(self.root)
