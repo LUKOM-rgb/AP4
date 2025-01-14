@@ -1,7 +1,33 @@
 import os
 import tkinter as tk
-from tkinter import Text, Tk, messagebox, Frame, Label, Button, Menu, Canvas, PhotoImage
+from tkinter import Text, Tk, messagebox, Frame, Label, Button, Canvas, PhotoImage
 import sys
+
+# Função para adicionar review
+def adicionar_review(jogo_name):
+    review_window = tk.Toplevel()
+    review_window.title(f"Adicionar Review para {jogo_name}")
+    review_window.geometry("400x300")
+
+    label = tk.Label(review_window, text="Digite sua review:")
+    label.pack(pady=10)
+
+    entry_review = tk.Entry(review_window, width=50)
+    entry_review.pack(pady=10)
+
+    def salvar_review():
+        review_text = entry_review.get()
+        if review_text and user_data:  # Verifica se user_data está definido
+            # Salvar a review no arquivo de reviews
+            with open(f"jogos/{jogo_name}/reviews.txt", "a", encoding="utf-8") as file:
+                file.write(f"{user_data[0]}:{review_text}\n")  # user_data[0] é o nome do utilizador
+            messagebox.showinfo("Sucesso", "Review adicionada com sucesso!")
+            review_window.destroy()
+        else:
+            messagebox.showerror("Erro", "A review não pode estar vazia ou você não está logado.")
+
+    button_salvar = tk.Button(review_window, text="Salvar Review", command=salvar_review)
+    button_salvar.pack(pady=20)
 
 # Ler de projeto.py
 if len(sys.argv) > 1:
@@ -57,8 +83,6 @@ for star in stars:
     star_label = Label(rating_frame, text=star, font=("Inter", 20), bg="#2C2C2C", fg="yellow")
     star_label.pack(side="left")
 
-
-
 rating_label = Label(rating_frame, text=f"{rating} / 5", font=("Inter", 20), bg="#2C2C2C", fg="white")
 rating_label.pack(side="left", padx=10)
 
@@ -82,6 +106,10 @@ review_title.grid(row=1, column=0, sticky="w", pady=10)
 reviews_frame = Frame(main_frame, bg="#2C2C2C")
 reviews_frame.grid(row=2, column=0, columnspan=2, sticky="w")
 
+# Adicionar botão para adicionar review
+add_review_button = Button(main_frame, text="Adicionar Review", bg="#E6C614", fg="#FFFFFF", command=lambda: adicionar_review(jogo_name))
+add_review_button.grid(row=3)
+
 # Função para carregar reviews de um arquivo
 def carregar_reviews(arquivo):
     reviews_list = []
@@ -96,35 +124,7 @@ def carregar_reviews(arquivo):
 
 reviews = carregar_reviews(f"jogos/{jogo_name}/reviews.txt")
 for review in reviews:
-    review_label = tk.Label(reviews_frame, text=review, font=("Inter", 12), bg="black", fg="white", anchor="w")
-    review_label.pack(anchor="w")
-# Adicione esta função no arquivo jogo.py
-
-def adicionar_review(jogo_name):
-    review_window = tk.Toplevel()
-    review_window.title(f"Adicionar Review para {jogo_name}")
-    review_window.geometry("400x300")
-
-    label = tk.Label(review_window, text="Digite sua review:")
-    label.pack(pady=10)
-
-    entry_review = tk.Entry(review_window, width=50)
-    entry_review.pack(pady=10)
-
-    def salvar_review():
-        review_text = entry_review.get()
-        if review_text:
-            # Salvar a review no arquivo de reviews
-            with open(f"jogos/{jogo_name}/reviews.txt", "a", encoding="utf-8") as file:
-                file.write(f"{user_data[0]};{review_text}\n")  # user_data[0] é o nome do utilizador
-            messagebox.showinfo("Sucesso", "Review adicionada com sucesso!")
-            review_window.destroy()
-        else:
-            messagebox.showerror("Erro", "A review não pode estar vazia.")
-
-    button_salvar = tk.Button(review_window, text="Salvar Review", command=salvar_review)
-    button_salvar.pack(pady=20)
-    
+    review_label = tk.Label(reviews_frame, text=review, font=("Inter", 12), bg="#2C2C2C", fg="white", anchor="w")
 try:
     with open("logged_as.txt", "r", encoding="utf-8") as file:
         dados = file.readlines()

@@ -453,10 +453,6 @@ class jogostoreApp:
         Button(card_frame, text="Adicionar à lista", bg="#E6C614", fg="#FFFFFF", 
             command=lambda g=jogo["name"]: self.adicionar_lista(g)).pack(pady=5)
 
-        # Botão para adicionar review
-        Button(card_frame, text="Adicionar Review", bg="#E6C614", fg="#FFFFFF", 
-            command=lambda g=jogo["name"]: adicionar_review(g)).pack(pady=5)
-
     def remover_da_lista(self, jogo, frame):
         if jogo in self.lista:
             self.lista.remove(jogo)
