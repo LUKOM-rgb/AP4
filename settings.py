@@ -41,7 +41,7 @@ def mudar_email():
             updated_lines = []
             for line in lines:
                 stored_data = line.strip().split("|")
-                if stored_data[0] == user_data[0]:  # Se o nome de usuário for igual ao logado
+                if stored_data[0] == user_data[0]:  # Se o nome de Utilizador for igual ao logado
                     stored_data[1] = new_email  # Atualiza o email
                 updated_lines.append("|".join(stored_data))
 
@@ -94,7 +94,7 @@ def mudar_senha():
             return
 
         # Atualizar a senha no logged_as.txt
-        user_data[-1] = new_password
+        user_data[5] = new_password
         with open("logged_as.txt", "w", encoding="utf-8") as file:
             file.write("|".join(user_data))
 
@@ -106,8 +106,8 @@ def mudar_senha():
             updated_lines = []
             for line in lines:
                 stored_data = line.strip().split("|")
-                if stored_data[0] == user_data[0]:  # Verifica se é o usuário logado
-                    stored_data[-1] = new_password  # Atualiza a senha
+                if stored_data[0] == user_data[0]:  # Verifica se é o Utilizador logado
+                    stored_data[5] = new_password  # Atualiza a senha
                 updated_lines.append("|".join(stored_data))
 
             # Escrever as alterações de volta no arquivo
