@@ -127,7 +127,7 @@ def criar_conta():
                     return
 
         with open("utilizadores.txt", "a", encoding="utf-8") as file:
-            file.write(f"{username}|{email}|{dia}|{mes}|{ano}|{password}\n")
+            file.write(f"{username}|{email}|{dia}|{mes}|{ano}|{password}|utilizador\n")
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao guardar os dados: {e}")
         return

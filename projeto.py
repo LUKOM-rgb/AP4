@@ -6,7 +6,7 @@ from PIL import Image, ImageTk  # Para trabalhar com imagens
 import subprocess
 from tkinter import font
 from winotify import Notification
-
+from customtkinter import *
 
 def get_font(family, size=12, weight="normal"):
     available_fonts = font.families()
@@ -14,6 +14,16 @@ def get_font(family, size=12, weight="normal"):
         return font.Font(family=family, size=size, weight=weight)
     return font.Font(family="Inter", size=size, weight=weight)
 
+try:
+    with open("logged_as.txt", "r", encoding="utf-8") as file:
+        dados = file.readlines()
+
+    # Verificar se o nome de utilizador e senha correspondem
+    for line in dados:
+        user_data = line.strip().split("|")  # Dividir
+        print(f"{user_data}")
+except FileNotFoundError:
+    messagebox.showerror("COMO???", "Não tem sessão iniciada!")
 
 class jogostoreApp:
     def __init__(self, root):
@@ -74,6 +84,11 @@ class jogostoreApp:
         # Botão para abrir dicas
         Button(self.filter_frame, text="Dicas", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF",
                command=self.abrir_dicas).pack(fill=tk.X, pady=20)
+
+        # Botão para abrir ADMIN
+        if user_data[6] == "admin":
+            Button(self.filter_frame, text="ADMIN", font=("Inter", 12, "bold"), bg="#1814E6", fg="#FFFFFF",
+                command=self.abrir_admin).pack(fill=tk.X, pady=20)
 
         # Frame para exibição de jogos
         self.jogo_display_frame = Frame(self.root, bg="#2C2C2C")
@@ -239,6 +254,223 @@ class jogostoreApp:
             jogo_name = jogo["name"]
             dica = self.dicas_descr.get(jogo_name, "Sem dicas disponíveis.")
             self.criar_capa_dica(lista_window, jogo_name, dica)
+
+    def abrir_admin(self):
+        lista_window = tk.Toplevel(self.root)
+        lista_window.title("ADMIN")
+        lista_window.geometry("800x700")
+        lista_window.configure(bg="#2C2C2C")
+
+
+        Label(lista_window, text="PAINEL DE ADMINISTRADOR", font=("Inter", 16, "bold"),
+              bg="#1814E6", fg="#FFFFFF").pack(pady=10)
+
+        # Exibir data e hora do último login
+        try:
+            with open("logged_as.txt", "r") as file:
+                dados = file.readlines()
+
+                for line in dados:
+                    user_data = line.strip().split("|")
+                Label(lista_window, text=f"ligado como: {user_data[0]} ({user_data[1]})", bg="#2C2C2C", fg="#FFFFFF").pack(pady=5)
+        except FileNotFoundError:
+            Label(lista_window, text="Nenhum login..?", bg="#2C2C2C", fg="#FFFFFF").pack(pady=5)
+
+        # Campo para o nome de jogo
+        Label(lista_window, text="Insira o nome do jogo que deseja adicionar:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=10)
+        self.entry_jogo_nome = tk.Entry(lista_window, width=30)
+        self.entry_jogo_nome.pack(pady=5)
+
+        # Campo para o género do jogo
+        Label(lista_window, text="Insira o género do jogo que deseja adicionar:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=10)
+        self.entry_jogo_genero = tk.Entry(lista_window, width=30)
+        self.entry_jogo_genero.pack(pady=5)
+
+        # Campo para a capa do jogo
+        Label(lista_window, text="Selecione a imagem para a capa do jogo que quer adicionar:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=10)
+        self.entry_jogo_capa = tk.Entry(lista_window, width=30)
+        self.entry_jogo_capa.pack(pady=5)
+
+        # Botão para adicionar jogo
+        Button(lista_window, text="Adicionar Jogo", command=self.adicionar_jogo).pack(pady=10)
+
+        # Botão para remover jogo
+        Button(lista_window, text="Remover Jogo", command=self.remover_jogo).pack(pady=10)
+
+        # Campo para remover conta
+        Label(lista_window, text=f"{"-" * 70}\nInsira um nome do utilizador:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=5)
+        self.entry_utilizador_rem = tk.Entry(lista_window, width=30)
+        self.entry_utilizador_rem.pack(pady=5)
+
+        # Botão para remover conta
+        btn_frame = tk.Frame(lista_window,bg="#2C2C2C")
+        btn_frame.pack(pady=10)
+        Button(btn_frame, text="(Des)promover Conta", command=self.promover_conta, bg="#2CCC2C").pack(side="left", padx=5)
+        Button(btn_frame, text="Remover Conta", command=self.remover_conta, bg="#CC2C2C").pack(side="left", padx=5)
+
+        # Exibir número de contas
+        self.exibir_numero_contas(lista_window)
+
+    def remover_conta(self):
+        username_to_remove = self.entry_utilizador_rem.get().strip()
+
+        if not username_to_remove:
+            messagebox.showerror("Erro", "Por favor, insira um nome de utilizador válido.")
+            return
+
+        # Verificar se a conta existe
+        contas = []
+        try:
+            with open("utilizadores.txt", "r", encoding="utf-8") as file:
+                contas = file.readlines()
+
+            # Verificar se o utilizador está na lista
+            user_found = False
+            for conta in contas:
+                user_data = conta.strip().split("|")
+                if user_data[0].strip() == username_to_remove:
+                    user_found = True
+                    break
+
+            if not user_found:
+                messagebox.showerror("Erro", "Utilizador não encontrado.")
+                return
+
+        except FileNotFoundError:
+            messagebox.showerror("Erro", "O ficheiro 'utilizadores.txt' não foi encontrado!")
+            return
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao aceder ao ficheiro: {e}")
+            return
+
+        # Perguntar confirmação
+        confirmar = messagebox.askyesno(
+            "Confirmação",
+            f"Tem a certeza de que deseja remover a conta '{username_to_remove}'?"
+        )
+        if not confirmar:
+            return
+        else:
+    # Remover a conta
+            try:
+                with open("utilizadores.txt", "w", encoding="utf-8") as file:
+                    for conta in contas:
+                        user_data = conta.strip().split("|")
+                        if user_data[0].strip() != username_to_remove:
+                            file.write(conta)  # Escrever de volta apenas as contas que não são a removida
+
+                messagebox.showinfo("Sucesso", f"Conta '{username_to_remove}' removida com sucesso!")
+
+            except Exception as e:
+                messagebox.showerror("Erro", f"Erro ao remover a conta: {e}")
+
+    def promover_conta(self):
+        username_to_alter = self.entry_utilizador_rem.get().strip()
+
+        if not username_to_alter:
+            messagebox.showerror("Erro", "Por favor, insira um nome de utilizador válido.")
+            return
+
+        # Verificar se a conta existe
+        contas = []
+        try:
+            with open("utilizadores.txt", "r", encoding="utf-8") as file:
+                contas = file.readlines()
+
+            # Verificar se o utilizador está na lista
+            user_found = False
+            novas_contas = []
+            for conta in contas:
+                user_data = conta.strip().split("|")
+                if user_data[0].strip() == username_to_alter:
+                    user_found = True
+                    # Alterar "utilizador" para "admin" e vice-versa
+                    if user_data[6].strip() == "utilizador":
+                        user_data[6] = "admin"
+                    elif user_data[6].strip() == "admin":
+                        user_data[6] = "utilizador"
+
+                    # Recriar a linha alterada
+                    novas_contas.append("|".join(user_data) + "\n")
+                else:
+                    novas_contas.append(conta)  # Manter as outras linhas inalteradas
+
+            if not user_found:
+                messagebox.showerror("Erro", "Utilizador não encontrado.")
+                return
+
+        except FileNotFoundError:
+            messagebox.showerror("Erro", "O ficheiro 'utilizadores.txt' não foi encontrado!")
+            return
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao aceder ao ficheiro: {e}")
+            return
+
+        # Perguntar confirmação
+        confirmar = messagebox.askyesno(
+            "Confirmação",
+            f"Tem a certeza de que deseja alterar o papel da conta '{username_to_alter}' para {user_data[6]}?"
+        )
+        if not confirmar:
+            return
+
+        # Escrever as alterações de volta ao ficheiro
+        try:
+            with open("utilizadores.txt", "w", encoding="utf-8") as file:
+                file.writelines(novas_contas)
+
+            messagebox.showinfo(
+                "Sucesso",
+                f"O papel da conta '{username_to_alter}' foi alterado com sucesso!"
+            )
+
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao guardar as alterações: {e}")
+
+
+    def adicionar_jogo(self):
+        # Coletar dados do jogo
+        jogo_nome = self.entry_jogo_nome.get().strip()  # Supondo que você tenha um campo de entrada para o nome do jogo
+        jogo_genero = self.entry_jogo_genero.get().strip()  # Supondo que você tenha um campo de entrada para o gênero do jogo
+        jogo_capa = self.entry_jogo_capa.get().strip()  # Supondo que você tenha um campo de entrada para o caminho da imagem
+
+        # Validações
+        if not jogo_nome or not jogo_genero or not jogo_capa:
+            messagebox.showerror("Erro", "Por favor, preencha todos os campos para adicionar um novo jogo")
+            return
+
+        # Verificar se o jogo já existe
+        try:
+            with open("jogos.txt", "r", encoding="utf-8") as file:
+                jogos = file.readlines()
+                for jogo in jogos:
+                    if jogo_nome in jogo:
+                        messagebox.showerror("Erro", "Jogo já existe!")
+                        return
+
+            # Adicionar o novo jogo ao arquivo
+            with open("jogos.txt", "a", encoding="utf-8") as file:
+                file.write(f"{jogo_nome}|{jogo_genero}|{jogo_capa}\n")  # Exemplo de formato
+            messagebox.showinfo("Sucesso", f"Jogo '{jogo_nome}' adicionado com sucesso!")
+
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao adicionar o jogo: {e}")
+
+    def remover_jogo(self):
+        # Implementar lógica para remover um jogo existente
+        pass
+
+    def exibir_numero_contas(self, parent):
+        try:
+            with open("utilizadores.txt", "r", encoding="utf-8") as file:
+                contas = file.readlines()
+                numero_contas = len(contas)
+                Label(parent, text=f"Número de Contas: {numero_contas}\nReabra o painel para atualizar papeis.", bg="#2C2C2C", fg="#FFFFFF").pack(pady=5)
+                for conta in contas:
+                    dados = conta.strip().split("|")
+                    Label(parent, text=f"Utilizador: {dados[0]}, Email: {dados[1]}, Papel: {dados[6]}", bg="#2C2C2C", fg="#FFFFFF").pack(pady=2)
+        except FileNotFoundError:
+            Label(parent, text="Arquivo de contas não encontrado.", bg="#2C2C2C", fg="#FFFFFF").pack(pady=5)
 
     def criar_capa_dica(self, parent, jogo_name, dica):
         card_frame = Frame(parent, bg="#FFFFFF", relief="sunken", borderwidth=1, padx=10, pady=10)

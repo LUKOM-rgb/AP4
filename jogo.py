@@ -116,8 +116,8 @@ def carregar_reviews(arquivo):
     try:
         with open(arquivo, "r", encoding="utf-8") as file:
             for line in file:
-                usuario, texto = line.strip().split(";", 1)
-                reviews_list.append(f"{usuario} - {texto}")
+                Utilizador, texto = line.strip().split(";", 1)
+                reviews_list.append(f"{Utilizador} - {texto}")
     except FileNotFoundError:
         reviews_list.append("Erro: Arquivo de reviews não encontrado.")
     return reviews_list

@@ -1,2 +1,2 @@
-admin|admin@teste.pt|1|1|2001|12345
-a|b@teste.pt|1|1|2001|e
+admin|admin@teste.pt|1|1|2001|12345|admin
+a|b@teste.pt|1|1|2001|e|utilizador
