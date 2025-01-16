@@ -40,7 +40,7 @@ def login():
             saved_username =user_data[0].strip() #nome de utilizador
             saved_email = user_data[1].strip() #email para quem quiser entrar com isso
             saved_password = user_data[5].strip() #senha
-            
+
             if username == "admin" and password=="12345":
                 messagebox.showinfo("Sucesso", "Login efetuado como admin!")
                 subprocess.Popen(["python", "projeto_admin.py"])
@@ -49,7 +49,7 @@ def login():
             if password == saved_password and (username == saved_username or username == saved_email):
                 messagebox.showinfo("Sucesso", "Login efetuado com sucesso!")
                 with open("logged_as.txt", "w", encoding="utf-8") as file:
-                    file.write(f"{user_data[0]}|{user_data[1]}|{user_data[2]}|{user_data[3]}|{user_data[4]}|{user_data[5]}")
+                    file.write(f"{user_data[0]}|{user_data[1]}|{user_data[2]}|{user_data[3]}|{user_data[4]}|{user_data[5]}|{user_data[6]}")
                 subprocess.Popen(["python", "projeto.py"])
                 app.destroy()
                 return
