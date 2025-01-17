@@ -14,7 +14,7 @@ def create_interface():
         menu_bar = Menu(root, bg="#E6C614", fg="#FFFFFF")  # Cor de fundo e texto
 
         # Menu Arquivo
-        file_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF")
+        file_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF",activebackground="#776500")
         file_menu.add_command(label="Sign up", command=open_create_account)
         file_menu.add_command(label="Filtro", command=home)
         file_menu.add_separator()
@@ -22,7 +22,7 @@ def create_interface():
         menu_bar.add_cascade(label="Arquivo", menu=file_menu)
 
         # Menu Ajuda
-        help_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF")
+        help_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF",activebackground="#776500")
         help_menu.add_command(label="Utilizador", command=utilizador)
         help_menu.add_command(label="Sobre", command=sobre)
         menu_bar.add_cascade(label="Definições", menu=help_menu)
@@ -118,7 +118,7 @@ def create_interface():
             img_label.image = image
             img_label.pack()
 
-            Button(seller_item, text="wishlist", bg="gray", fg="white").pack(pady=5)
+            Button(seller_item, text="Lista de Desejos", bg="#E6C614", fg="#FFFFFF",activebackground="#776500").pack(pady=5)
 
     root.mainloop()
 

@@ -1,2 +1,4 @@
 admin|admin@teste.pt|1|1|2001|12345|admin
 a|b@teste.pt|1|1|2001|e|utilizador
+teste|teste@gmail.com|1|1|2001|123|utilizador
+dia16|ya@gmail.com|1|1|2001|e|utilizador

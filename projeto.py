@@ -78,11 +78,11 @@ class jogostoreApp:
             filtro_label.bind("<Button-1>", lambda event, g=filtro: self.filtrar_jogos(g))
 
         # Botão para abrir lista de desejos
-        Button(self.filter_frame, text="Lista de Desejos", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF",
+        Button(self.filter_frame, text="Lista de Desejos", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF",activebackground="#776500",
                command=self.abrir_lista).pack(fill=tk.X, pady=20)
 
         # Botão para abrir dicas
-        Button(self.filter_frame, text="Dicas", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF",
+        Button(self.filter_frame, text="Dicas", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF",activebackground="#776500",
                command=self.abrir_dicas).pack(fill=tk.X, pady=20)
 
         # Botão para abrir ADMIN
@@ -100,16 +100,17 @@ class jogostoreApp:
     # Criar barra de menus com cor personalizada
         self.menu_bar = Menu(self.root, bg="#E6C614", fg="#FFFFFF")  # Cor de fundo e texto
 
-    # Menu Arquivo
-        file_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF")  # Cor personalizada para o submenu
+    # Menu Principal
+        file_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF",activebackground="#776500",)  # Cor personalizada para o submenu
+
         file_menu.add_command(label="Sign up", command=self.open_create_account)
         file_menu.add_command(label="Home", command=self.home)
         file_menu.add_separator()
         file_menu.add_command(label="Sair", command=self.root.quit)
         self.menu_bar.add_cascade(label="Principal", menu=file_menu)
 
-    # Menu Ajuda
-        help_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF")
+    # Menu Definições
+        help_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF",activebackground="#776500",)
         help_menu.add_command(label="Utilizador", command=self.utilizador)
         help_menu.add_command(label="Sobre", command=self.sobre)
         self.menu_bar.add_cascade(label="Definições", menu=help_menu)
@@ -191,13 +192,7 @@ class jogostoreApp:
 
         Label(card_frame, text=f"Género: {jogo['Género']}", font=("Helvetica", 10), bg="white").pack(pady=5)
 
-        Button(
-    card_frame,
-    text="Adicionar à lista",
-    bg="#E6C614",
-    fg="#FFFFFF",
-    command=lambda g=jogo["name"]: self.adicionar_lista(g)
-).pack(pady=5)
+        Button(card_frame, text="Lista de Desejos",bg="#E6C614",fg="#FFFFFF", activebackground="#776500",command=lambda g=jogo["name"]: self.adicionar_lista(g)).pack(pady=5)
 
     def ver_dicas(self, jogo_name):
         # Criar a janela de dicas
@@ -478,7 +473,7 @@ class jogostoreApp:
 
         Label(card_frame, text=jogo_name, font=("Inter", 15, "bold"), bg="white").pack(side=tk.LEFT, padx=5)
         Label(card_frame, text=dica, font=("Inter", 14), bg="white").pack(side=tk.LEFT, padx=5)
-        Button(card_frame, text="Ver dicas", bg="#E6C614", fg="#FFFFFF", command=lambda: self.ver_dicas(jogo_name)).pack(side=tk.RIGHT, padx=5)
+        Button(card_frame, text="Ver dicas", bg="#E6C614", fg="#FFFFFF", activebackground="#776500", command=lambda: self.ver_dicas(jogo_name)).pack(side=tk.RIGHT, padx=5)
 
     def abrir_jogo(self, jogo_name): # Tenta abrir o arquivo do jogo com o mesmo nome
         print(f"A abrir: {jogo_name}") # print de debug

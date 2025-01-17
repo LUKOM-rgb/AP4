@@ -1,1 +1,1 @@
-admin|admin@teste.pt|1|1|2001|12345|admin
+dia16|ya@gmail.com|1|1|2001|e|utilizador

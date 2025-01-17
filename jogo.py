@@ -8,8 +8,9 @@ def adicionar_review(jogo_name):
     review_window = tk.Toplevel()
     review_window.title(f"Adicionar avaliação para {jogo_name}")
     review_window.geometry("400x300")
+    review_window.configure(bg="#2C2C2C")
 
-    label = tk.Label(review_window, text="Introduza sua avaliação:")
+    label = tk.Label(review_window, text="Introduza sua avaliação:", fg="#E6C614", bg="#2C2C2C")
     label.pack(pady=10)
 
     entry_review = tk.Entry(review_window, width=50)
@@ -26,7 +27,7 @@ def adicionar_review(jogo_name):
         else:
             messagebox.showerror("Erro", "A avaliação não pode estar vazia ou não tem sessão iniciada.")
 
-    button_guardar = tk.Button(review_window, text="Guardar avaliação", command=guardar_review)
+    button_guardar = tk.Button(review_window, text="Guardar avaliação", command=guardar_review, bg="#E6C614" ,activebackground="#776500")
     button_guardar.pack(pady=20)
 
 # Ler de projeto.py
@@ -52,12 +53,12 @@ left_frame.grid(row=0, column=0, sticky="n")
 
 # Imagem
 imagem = f"jogos/{jogo_name}/imagem.png"
-canvas = Canvas(left_frame, width=600, height=300, bg="#2C2C2C", highlightthickness=0)
+canvas = Canvas(left_frame, width=800, height=400, bg="#2C2C2C", highlightthickness=0)
 if os.path.exists(imagem):
     image = PhotoImage(file=imagem)
     canvas.create_image(300, 150, image=image)
 else:
-    canvas.create_rectangle(0, 0, 600, 300, fill="gray")
+    canvas.create_rectangle(0, 0, 800, 400, fill="gray")
     canvas.create_text(300, 150, text="⚠", font=("Inter", 48), fill="white")
 canvas.pack()
 
@@ -88,12 +89,12 @@ rating_label.pack(side="left", padx=10)
 
 # Seção da direita (Descrição)
 right_frame = Frame(main_frame, bg="#2C2C2C")
-right_frame.grid(row=0, column=1, sticky="n", padx=20)
+right_frame.grid(row=0 , column=4, sticky="n", padx=100)
 
 description_title = Label(right_frame, text="Descrição", font=("Inter", 16), bg="#2C2C2C", fg="white")
 description_title.pack(anchor="w")
 
-description_text = Text(right_frame, height=15, width=40, bg="#2C2C2C", fg="white", wrap="word")
+description_text = Text(right_frame, height=15, width=70, bg="#2C2C2C", fg="white", wrap="word")
 with open(f"jogos/{jogo_name}/data.txt", "r", encoding="utf-8") as file:
     description_text.insert("1.0", file.readline().strip())
 description_text.config(state="disabled")
@@ -101,14 +102,14 @@ description_text.pack()
 
 # Reviews
 review_title = Label(main_frame, text="Reviews:", font=("Inter", 16), bg="#2C2C2C", fg="white")
-review_title.grid(row=1, column=0, sticky="w", pady=10)
+review_title.grid(row=1, column=0, sticky="w", pady=5)
 
 reviews_frame = Frame(main_frame, bg="#2C2C2C")
 reviews_frame.grid(row=2, column=0, columnspan=2, sticky="w")
 
 # Adicionar botão para adicionar avaliação
-add_review_button = Button(main_frame, text="Adicionar avaliação", bg="#E6C614", fg="#FFFFFF", command=lambda: adicionar_review(jogo_name))
-add_review_button.grid(row=3)
+add_review_button = Button(main_frame, text="Adicionar avaliação", bg="#E6C614", fg="#FFFFFF", activebackground="#776500",command=lambda: adicionar_review(jogo_name))
+add_review_button.grid(row=3, column=0, sticky="w", pady=30)
 
 # Função para carregar reviews de um arquivo
 def carregar_reviews(arquivo):
@@ -135,7 +136,7 @@ try:
         user_data = line.strip().split("|")  # Dividir
         print(f"{user_data}")
 except FileNotFoundError:
-    messagebox.showerror("COMO???", "Não tem sessão iniciada!")
+    messagebox.showerror("Não tem sessão iniciada!")
 
 # Rodar a aplicação
 root.mainloop()
