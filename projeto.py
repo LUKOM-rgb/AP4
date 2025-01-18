@@ -530,9 +530,34 @@ class jogostoreApp:
                            command=lambda g=jogo_name: self.remover_da_lista(g, card_frame))
         remove_button.pack(side=tk.RIGHT, padx=5)
 
+        # Lista de desejos
+        self.lista = []
+        self.carregar_lista_desejos() 
+
+    def salvar_lista_desejos(self):
+        with open("lista_desejos.txt", "w", encoding="utf-8") as file:
+            for jogo in self.lista:
+                file.write(f"{jogo}\n")
+
+    def carregar_lista_desejos(self):
+        try:
+            with open("lista_desejos.txt", "r", encoding="utf-8") as file:
+                self.lista = [line.strip() for line in file.readlines()]
+        except FileNotFoundError:
+            self.lista = []  
+
+    def adicionar_lista(self, jogo):
+        if jogo not in self.lista:
+            self.lista.append(jogo)
+            self.salvar_lista_desejos()  # Salvar a lista de desejos
+            self.exibir_notificacao()
+        else:
+            messagebox.showinfo("Lista de desejos", f"{jogo} já está na lista!")
+
     def remover_da_lista(self, jogo, frame):
         if jogo in self.lista:
             self.lista.remove(jogo)
+            self.salvar_lista_desejos()  # Salvar a lista de desejos
             frame.destroy()
             messagebox.showinfo("Lista", f"{jogo} foi removido da sua lista.")
 
