@@ -38,15 +38,50 @@ class jogostoreApp:
         self.lista = []
 
         # Dados dos jogos, incluindo os caminhos das capas
-        self.jogos_data = [
-            {"name": "Grand Theft Auto V", "Género": "Ação", "Capa": "imagens/gta.png"},
-            {"name": "The Crew", "Género": "Simulação", "Capa": "imagens/Crew.jpg"},
-            {"name": "Grand Theft Auto VI", "Género": "Ação", "Capa": "imagens/gta6.jpg"},
-            {"name": "Manor Lords", "Género": "Simulação", "Capa": "imagens/lords.jpg"},
-            {"name": "EAFC 25", "Género": "Desporto", "Capa": "imagens/fc_25.png"},
-            {"name": "Bus Simulator 21", "Género": "Simulação", "Capa": "imagens/bus.jpg"},
-            {"name": "Minecraft", "Género": "Aventura", "Capa": "imagens/mine.jpeg"},
-            {"name": "Rainbow Six Siege", "Género": "Ação", "Capa": "imagens/R6.jpg"}
+        self.jogos_data = []
+        caminho_base = "jogos"
+
+        for pasta in os.listdir(caminho_base):
+            pasta_caminho = os.path.join(caminho_base, pasta)
+
+            # Verificar se é uma pasta
+            if os.path.isdir(pasta_caminho):
+                # Caminho do ficheiro "data.txt" dentro da pasta
+                data_file = os.path.join(pasta_caminho, "data.txt")
+
+                # Verificar a imagem de capa (png, jpg, jpeg)
+                capa = None
+                for ext in [".png", ".jpeg", ".jpg"]:
+                    imagem_caminho = os.path.join(pasta_caminho, f"imagem{ext}")
+                    if os.path.exists(imagem_caminho):
+                        capa = imagem_caminho
+                        break
+
+                # Verificar se "data.txt" existe
+                if os.path.exists(data_file):
+                    try:
+                        with open(data_file, "r", encoding="utf-8") as file:
+                            linhas = file.readlines()
+
+                            # Verificar se existem ao menos 3 linhas no ficheiro
+                            if len(linhas) >= 3:
+                                genero = linhas[2].strip()
+                            if len(linhas) >= 4:
+                                dicadescr = linhas[3].strip()
+                                # Adicionar a entrada na lista
+                                self.jogos_data.append({"name": pasta,"Género": genero,"Capa": capa, "Descrição Dica": dicadescr})
+                    except Exception as e:
+                        print(f"Erro ao processar '{data_file}': {e}")
+
+        """self.jogos_data = [
+            {"name": "Grand Theft Auto V", "Género": "Ação", "Capa": "jogos/Grand Theft Auto V/imagem.png"},
+            {"name": "The Crew", "Género": "Simulação", "Capa": "jogos/The Crew/imagem.jpg"},
+            {"name": "Grand Theft Auto VI", "Género": "Ação", "Capa": "jogos/Grand Theft Auto VI/imagem.jpg"},
+            {"name": "Manor Lords", "Género": "Simulação", "Capa": "jogos/Manor Lords/imagem.jpg"},
+            {"name": "EAFC 25", "Género": "Desporto", "Capa": "jogos/EAFC 25/imagem.png"},
+            {"name": "Bus Simulator 21", "Género": "Simulação", "Capa": "jogos/Bus Simulator 21/imagem.jpg"},
+            {"name": "Minecraft", "Género": "Aventura", "Capa": "jogos/Minecraft/imagem.jpeg"},
+            {"name": "Rainbow Six Siege", "Género": "Ação", "Capa": "jogos/Rainbow Six Siege/imagem.jpg"}
         ]
 
         # Descrição
@@ -59,7 +94,7 @@ class jogostoreApp:
             "Bus Simulator 21": "Conduza um autocarro numa cidade realista e cumpra horários.",
             "Minecraft": "Explore, construa e sobreviva num mundo de blocos.",
             "Rainbow Six Siege": "Participe de intensas batalhas táticas em equipa."
-        }
+        }"""
 
         inter_font = get_font("Inter", size=12)
 
@@ -249,7 +284,7 @@ class jogostoreApp:
         # Exibição das dicas para cada jogo
         for jogo in self.jogos_data:
             jogo_name = jogo["name"]
-            dica = self.dicas_descr.get(jogo_name, "Sem dicas disponíveis.")
+            dica = jogo["Descrição Dica"]
             self.criar_capa_dica(lista_window, jogo_name, dica)
 
     def abrir_admin(self):
@@ -286,8 +321,8 @@ class jogostoreApp:
         # Campo para a capa do jogo
         # Campo para a capa do jogo
         Label(lista_window, text="Selecione a imagem para a capa do jogo que quer adicionar:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=10)
-        self.entry_jogo_capa = tk.Entry(lista_window, width=30)  
-        self.entry_jogo_capa.pack(pady=5) 
+        self.entry_jogo_capa = tk.Entry(lista_window, width=30)
+        self.entry_jogo_capa.pack(pady=5)
         self.capaImagem = Button(lista_window, width=20, text="Imagem", command=self.escolherCapa)
         self.capaImagem.pack(pady=5)
 
@@ -297,7 +332,7 @@ class jogostoreApp:
         Label(lista_window, text="Escreva o jogo que quer remover:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=10)
         self.entry_jogo_remover = tk.Entry(lista_window, width=30)
         self.entry_jogo_remover.pack(pady=5)
- 
+
         self.removerJogo = Button(lista_window, text="Remover Jogo", command=self.remover_jogo)
         self.removerJogo.pack(pady=10)
 
@@ -441,7 +476,7 @@ class jogostoreApp:
             shutil.copy(caminho_imagem, destino)
             self.entry_jogo_capa.delete(0, tk.END)  # Limpar o campo de entrada
             self.entry_jogo_capa.insert(0, destino)  # Inserir o caminho da imagem
-            
+
     def adicionar_jogo(self):
         # Coletar dados do jogo
         jogo_nome_a = self.entry_jogo_nome.get().strip()  # Nome do jogo
