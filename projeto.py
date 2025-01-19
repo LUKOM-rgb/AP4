@@ -1,12 +1,14 @@
 import os
+import customtkinter
 import tkinter as tk
 from tkinter import messagebox, Frame, Label, Button
 from tkinter import Menu  # Para criar a barra de menus
+from tkinter import filedialog
 from PIL import Image, ImageTk  # Para trabalhar com imagens
 import subprocess
 from tkinter import font
 from winotify import Notification
-from customtkinter import *
+import shutil
 
 def get_font(family, size=12, weight="normal"):
     available_fonts = font.families()
@@ -282,15 +284,22 @@ class jogostoreApp:
         self.entry_jogo_genero.pack(pady=5)
 
         # Campo para a capa do jogo
+        # Campo para a capa do jogo
         Label(lista_window, text="Selecione a imagem para a capa do jogo que quer adicionar:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=10)
-        self.entry_jogo_capa = tk.Entry(lista_window, width=30)
-        self.entry_jogo_capa.pack(pady=5)
+        self.entry_jogo_capa = tk.Entry(lista_window, width=30)  
+        self.entry_jogo_capa.pack(pady=5) 
+        self.capaImagem = Button(lista_window, width=20, text="Imagem", command=self.escolherCapa)
+        self.capaImagem.pack(pady=5)
 
         # Botão para adicionar jogo
         Button(lista_window, text="Adicionar Jogo", command=self.adicionar_jogo).pack(pady=10)
 
-        # Botão para remover jogo
-        Button(lista_window, text="Remover Jogo", command=self.remover_jogo).pack(pady=10)
+        Label(lista_window, text="Escreva o jogo que quer remover:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=10)
+        self.entry_jogo_remover = tk.Entry(lista_window, width=30)
+        self.entry_jogo_remover.pack(pady=5)
+ 
+        self.removerJogo = Button(lista_window, text="Remover Jogo", command=self.remover_jogo)
+        self.removerJogo.pack(pady=10)
 
         # Campo para remover conta
         Label(lista_window, text=f"{"-" * 70}\nInsira um nome do utilizador:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=5)
@@ -422,38 +431,54 @@ class jogostoreApp:
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao guardar as alterações: {e}")
 
-
+    def escolherCapa(self):
+        caminho_imagem = filedialog.askopenfilename(title="Selecione uma imagem",
+                                                filetypes=(("png files", "*.png"), ("all files", "*.*")))
+        if caminho_imagem:
+            # Copiar a imagem para a pasta "imagens"
+            nome_imagem = os.path.basename(caminho_imagem)
+            destino = os.path.join("imagens", nome_imagem)
+            shutil.copy(caminho_imagem, destino)
+            self.entry_jogo_capa.delete(0, tk.END)  # Limpar o campo de entrada
+            self.entry_jogo_capa.insert(0, destino)  # Inserir o caminho da imagem
+            
     def adicionar_jogo(self):
         # Coletar dados do jogo
-        jogo_nome = self.entry_jogo_nome.get().strip()  # Supondo que você tenha um campo de entrada para o nome do jogo
-        jogo_genero = self.entry_jogo_genero.get().strip()  # Supondo que você tenha um campo de entrada para o gênero do jogo
-        jogo_capa = self.entry_jogo_capa.get().strip()  # Supondo que você tenha um campo de entrada para o caminho da imagem
+        jogo_nome_a = self.entry_jogo_nome.get().strip()  # Nome do jogo
+        jogo_genero = self.entry_jogo_genero.get().strip()  # Gênero do jogo
+        jogo_capa = self.entry_jogo_capa.get().strip()  # Caminho da imagem da capa
 
         # Validações
-        if not jogo_nome or not jogo_genero or not jogo_capa:
+        if not jogo_nome_a or not jogo_genero or not jogo_capa:
             messagebox.showerror("Erro", "Por favor, preencha todos os campos para adicionar um novo jogo")
             return
 
-        # Verificar se o jogo já existe
-        try:
-            with open("jogos.txt", "r", encoding="utf-8") as file:
-                jogos = file.readlines()
-                for jogo in jogos:
-                    if jogo_nome in jogo:
-                        messagebox.showerror("Erro", "Jogo já existe!")
-                        return
+        # Verificar se o jogo já existe na lista
+        for jogo in self.jogos_data:
+            if jogo["name"].lower() == jogo_nome_a.lower():  # Comparação sem diferenciar maiúsculas e minúsculas
+                messagebox.showerror("Erro", "Jogo já existe!")
+                return
 
-            # Adicionar o novo jogo ao arquivo
-            with open("jogos.txt", "a", encoding="utf-8") as file:
-                file.write(f"{jogo_nome}|{jogo_genero}|{jogo_capa}\n")  # Exemplo de formato
-            messagebox.showinfo("Sucesso", f"Jogo '{jogo_nome}' adicionado com sucesso!")
+        # Adicionar o novo jogo à lista interna
+        self.jogos_data.append({"name": jogo_nome_a, "Género": jogo_genero, "Capa": jogo_capa})
 
-        except Exception as e:
-            messagebox.showerror("Erro", f"Erro ao adicionar o jogo: {e}")
+        # Atualizar a exibição de jogos
+        self.display_jogos(self.jogos_data)
+
+        messagebox.showinfo("Sucesso", f"Jogo '{jogo_nome_a}' adicionado com sucesso!")
 
     def remover_jogo(self):
-        # Implementar lógica para remover um jogo existente
-        pass
+        jogo_remover = self.entry_jogo_remover.get().strip()  # Obter o nome do jogo a ser removido
+        # Verificar se o jogo existe na lista
+        for jogo in self.jogos_data:
+            if jogo["name"].lower() == jogo_remover.lower():  # Comparação sem diferenciar maiúsculas e minúsculas
+                self.jogos_data.remove(jogo)  # Remove o jogo da lista
+                messagebox.showinfo("Sucesso", f"Jogo '{jogo_remover}' removido com sucesso!")
+                self.display_jogos(self.jogos_data)  # Atualiza a exibição de jogos
+                return
+
+        # Se o jogo não for encontrado
+        messagebox.showerror("Erro", f"Jogo '{jogo_remover}' não encontrado na lista.")
 
     def exibir_numero_contas(self, parent):
         try:
