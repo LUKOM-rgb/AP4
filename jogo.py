@@ -52,7 +52,7 @@ left_frame = Frame(main_frame, bg="#2C2C2C")
 left_frame.grid(row=0, column=0, sticky="n")
 
 # Imagem
-imagem = f"jogos/{jogo_name}/imagem.png"
+imagem = f"jogos/{jogo_name}/imagem.jpg"
 canvas = Canvas(left_frame, width=800, height=400, bg="#2C2C2C", highlightthickness=0)
 if os.path.exists(imagem):
     image = PhotoImage(file=imagem)
