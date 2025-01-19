@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 from tkinter import Text, Tk, messagebox, Frame, Label, Button, Canvas, PhotoImage
+from PIL import Image, ImageTk
 import sys
 
 # Função para adicionar avaliação
@@ -52,14 +53,29 @@ left_frame = Frame(main_frame, bg="#2C2C2C")
 left_frame.grid(row=0, column=0, sticky="n")
 
 # Imagem
-imagem = f"jogos/{jogo_name}/imagem.jpg"
+imagem = None
+for ext in [".png", ".jpg", ".jpeg"]:
+    potencial_imagem = f"jogos/{jogo_name}/imagem{ext}"
+    if os.path.exists(potencial_imagem):
+        imagem = potencial_imagem
+        break
+
 canvas = Canvas(left_frame, width=800, height=400, bg="#2C2C2C", highlightthickness=0)
 if os.path.exists(imagem):
-    image = PhotoImage(file=imagem)
-    canvas.create_image(300, 150, image=image)
+    try:
+        img = Image.open(imagem)
+        img = img.resize((800, 400))
+        image = ImageTk.PhotoImage(img)
+        canvas.create_image(400, 200, image=image)
+        canvas.image = image  # Necessário para evitar que a imagem seja descarregada
+    except Exception as e:
+        canvas.create_rectangle(0, 0, 800, 400, fill="gray")
+        canvas.create_text(400, 200, text=f"Erro: {e}", font=("Inter", 14), fill="white")
 else:
+    # Exibir um retângulo cinza e um ícone de aviso
     canvas.create_rectangle(0, 0, 800, 400, fill="gray")
-    canvas.create_text(300, 150, text="⚠", font=("Inter", 48), fill="white")
+    canvas.create_text(400, 200, text="⚠", font=("Inter", 48), fill="white")
+
 canvas.pack()
 
 # Avaliação
