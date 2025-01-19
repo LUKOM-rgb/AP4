@@ -56,7 +56,7 @@ class jogostoreApp:
             "EAFC 25": "Participe de partidas emocionantes e conquiste o campeonato.",
             "Bus Simulator 21": "Conduza um autocarro numa cidade realista e cumpra horários.",
             "Minecraft": "Explore, construa e sobreviva num mundo de blocos.",
-            "Rainbow Six Siege": "Participe de intensas batalhas táticas em equipe."
+            "Rainbow Six Siege": "Participe de intensas batalhas táticas em equipa."
         }
 
         inter_font = get_font("Inter", size=12)
@@ -509,7 +509,7 @@ class jogostoreApp:
         lista_window.geometry("600x400")
         lista_window.configure(bg="#2C2C2C")
 
-        Label(lista_window, text="Sua Lista de Desejos", font=("Inter", 16, "bold"),
+        Label(lista_window, text="A Sua Lista de Desejos", font=("Inter", 16, "bold"),
           bg="#2C2C2C", fg="#E6C614").pack(pady=10)
 
     # Exibição dos itens da lista de desejos
@@ -532,7 +532,7 @@ class jogostoreApp:
 
         # Lista de desejos
         self.lista = []
-        self.carregar_lista_desejos() 
+        self.carregar_lista_desejos()
 
     def salvar_lista_desejos(self):
         with open("lista_desejos.txt", "w", encoding="utf-8") as file:
@@ -544,7 +544,7 @@ class jogostoreApp:
             with open("lista_desejos.txt", "r", encoding="utf-8") as file:
                 self.lista = [line.strip() for line in file.readlines()]
         except FileNotFoundError:
-            self.lista = []  
+            self.lista = []
 
     def adicionar_lista(self, jogo):
         if jogo not in self.lista:
@@ -565,7 +565,7 @@ class jogostoreApp:
         self.lista.clear()
         for widget in lista_window.winfo_children():
             widget.destroy()
-        Label(lista_window, text="Sua Lista de Desejos está vazia.", bg="#2C2C2C", fg="#FFFFFF", font=("Inter", 12)).pack(pady=20)
+        Label(lista_window, text="A Sua Lista de Desejos está vazia.", bg="#2C2C2C", fg="#FFFFFF", font=("Inter", 12)).pack(pady=20)
 
     def filtrar_jogos(self, Género):
         if Género == "todos":
