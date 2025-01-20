@@ -81,7 +81,7 @@ def create_interface():
             return None
 
     
-    trending_images = ["imagens/gta6.jpg", "imagens/banner2.jpg", "imagens/banner.png"]
+    trending_images = ["jogos\Grand Theft Auto VI\imagem.jpg", "imagens/banner2.jpg", "imagens/banner.png"]
     for image_path in trending_images:
         image = load_image(image_path, 390, 243)
         if image:
@@ -101,11 +101,11 @@ def create_interface():
 
     
     top_sellers_images = [
-        "imagens/lords.jpg",
-        "imagens/fc_25.png",
-        "imagens/Bus.jpg",
-        "imagens/mine.jpeg",
-        "imagens/R6.jpg",
+        "jogos\Manor Lords\imagem.jpg",
+        "jogos\EAFC 25\imagem.png",
+        "jogos\Bus Simulator 21\imagem.jpg",
+        "jogos\Minecraft\imagem.jpeg",
+        "jogos\Rainbow Six Siege\imagem.jpg",
     ]
 
     for image_path in top_sellers_images:

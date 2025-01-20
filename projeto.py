@@ -36,7 +36,8 @@ class jogostoreApp:
 
         # Lista de desejos
         self.lista = []
-
+        self.carregar_lista_desejos()
+        
         # Dados dos jogos, incluindo os caminhos das capas
         self.jogos_data = []
         caminho_base = "jogos"
@@ -555,11 +556,16 @@ class jogostoreApp:
         notification.show()
 
     def adicionar_lista(self, jogo):
+        if not jogo.strip():
+            messagebox.showerror("Erro", "O nome do jogo não pode estar vazio!")
+            return
         if jogo not in self.lista:
             self.lista.append(jogo)
-            self.exibir_notificacao()  # Chama a função de notificação corretamente
+            self.exibir_notificacao()
+            self.salvar_lista_desejos()  # Salvar após adicionar
         else:
             messagebox.showinfo("Lista de desejos", f"{jogo} já está na lista!")
+
 
 
 
@@ -570,15 +576,17 @@ class jogostoreApp:
         lista_window.configure(bg="#2C2C2C")
 
         Label(lista_window, text="A Sua Lista de Desejos", font=("Inter", 16, "bold"),
-          bg="#2C2C2C", fg="#E6C614").pack(pady=10)
+             bg="#2C2C2C", fg="#E6C614").pack(pady=10)
 
-    # Exibição dos itens da lista de desejos
-        for jogo in self.lista:
-         self.criar_capa(lista_window, jogo)
+        if not self.lista:
+            Label(lista_window, text="A lista está vazia.", bg="#2C2C2C", fg="#FFFFFF",
+              font=("Inter", 12)).pack(pady=20)
+        else:
+            for jogo in self.lista:
+                self.criar_capa(lista_window, jogo)
 
-    # Botão "Remover Todos"
         Button(lista_window, text="Remover Todos", bg="#FF0000", fg="#FFFFFF",
-           command=lambda: self.Limpar_lista(lista_window)).pack(pady=10)
+           command=lambda: self.limpar_lista(lista_window)).pack(pady=10)
 
     def criar_capa(self, parent, jogo_name):
         card_frame = Frame(parent, bg="#FFFFFF", relief="sunken", borderwidth=1, padx=10, pady=10)
@@ -587,17 +595,16 @@ class jogostoreApp:
         Label(card_frame, text=jogo_name, font=("Inter", 12, "bold"), bg="white").pack(side=tk.LEFT, padx=5)
 
         remove_button = Button(card_frame, text="Remover",
-                           command=lambda g=jogo_name: self.remover_da_lista(g, card_frame))
+                               command=lambda: self.remover_da_lista(jogo_name, card_frame))
         remove_button.pack(side=tk.RIGHT, padx=5)
 
-        # Lista de desejos
-        self.lista = []
-        self.carregar_lista_desejos()
-
     def salvar_lista_desejos(self):
-        with open("lista_desejos.txt", "w", encoding="utf-8") as file:
-            for jogo in self.lista:
-                file.write(f"{jogo}\n")
+        try:
+            with open("lista_desejos.txt", "w", encoding="utf-8") as file:
+                for jogo in self.lista:
+                    file.write(f"{jogo}\n")
+        except Exception as e:
+            messagebox.showerror("Erro", f"Não foi possível salvar a lista: {e}")
 
     def carregar_lista_desejos(self):
         try:
@@ -605,27 +612,25 @@ class jogostoreApp:
                 self.lista = [line.strip() for line in file.readlines()]
         except FileNotFoundError:
             self.lista = []
+        except Exception as e:
+            messagebox.showerror("Erro", f"Não foi possível carregar a lista: {e}")
+            self.lista = []
 
-    def adicionar_lista(self, jogo):
-        if jogo not in self.lista:
-            self.lista.append(jogo)
-            self.salvar_lista_desejos()  # Salvar a lista de desejos
-            self.exibir_notificacao()
-        else:
-            messagebox.showinfo("Lista de desejos", f"{jogo} já está na lista!")
 
     def remover_da_lista(self, jogo, frame):
         if jogo in self.lista:
             self.lista.remove(jogo)
-            self.salvar_lista_desejos()  # Salvar a lista de desejos
+            self.salvar_lista_desejos()
             frame.destroy()
             messagebox.showinfo("Lista", f"{jogo} foi removido da sua lista.")
 
-    def Limpar_lista(self, lista_window):
+    def limpar_lista(self, lista_window):
         self.lista.clear()
+        self.salvar_lista_desejos()
         for widget in lista_window.winfo_children():
             widget.destroy()
-        Label(lista_window, text="A Sua Lista de Desejos está vazia.", bg="#2C2C2C", fg="#FFFFFF", font=("Inter", 12)).pack(pady=20)
+        Label(lista_window, text="A Sua Lista de Desejos está vazia.", bg="#2C2C2C", fg="#FFFFFF",
+              font=("Inter", 12)).pack(pady=20)
 
     def filtrar_jogos(self, Género):
         if Género == "todos":
