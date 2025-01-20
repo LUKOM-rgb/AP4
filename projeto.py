@@ -64,10 +64,10 @@ class jogostoreApp:
                             linhas = file.readlines()
 
                             # Verificar se existem ao menos 3 linhas no ficheiro
+                            if len(linhas) >= 2:
+                                genero = linhas[1].strip()
                             if len(linhas) >= 3:
-                                genero = linhas[2].strip()
-                            if len(linhas) >= 4:
-                                dicadescr = linhas[3].strip()
+                                dicadescr = linhas[2].strip()
                                 # Adicionar a entrada na lista
                                 self.jogos_data.append({"name": pasta,"Género": genero,"Capa": capa, "Descrição Dica": dicadescr})
                     except Exception as e:

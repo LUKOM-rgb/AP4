@@ -1,3 +1,3 @@
-Manor Lords é um jogo de estratégia que permite experienciar a vida de um senhor medieval. Transforme a sua aldeia inicial numa cidade movimentada, gerencie recursos e cadeias de produção e expanda as suas terras através de conquistas.
-
-Inspirado na arte e arquitetura da Francónia do final do século XIV, Manor Lords prioriza a precisão histórica sempre que possível, utilizando-a para informar tanto a mecânica de jogo como o visual. Os tropos medievais comuns são evitados em favor da precisão histórica, de forma a tornar o mundo mais autêntico, colorido e credível.
+3.5
+Simulação
+Construa e gerencie a sua própria cidade medieval.

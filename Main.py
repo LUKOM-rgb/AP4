@@ -59,11 +59,11 @@ def create_interface():
 
     barra_menu()
 
-    
+
     main_frame = tk.Frame(root, bg="#1a1a1a")
     main_frame.pack(side="left", fill="both", expand=True)
 
-   
+
     trending_label = Label(main_frame, text="Trending", font=("Arial", 18, "bold"), bg="#1a1a1a", fg="white")
     trending_label.pack(anchor="w", padx=20, pady=(10, 0))
 
@@ -80,8 +80,7 @@ def create_interface():
             print(f"Erro ao carregar a imagem {image_path}: {e}")
             return None
 
-    
-    trending_images = ["imagens/gta6.jpg", "imagens/banner2.jpg", "imagens/banner.png"]
+    trending_images = ["jogos/Grand Theft Auto VI/imagem.jpg", "imagens/banner2.jpg", "imagens/banner.png"]
     for image_path in trending_images:
         image = load_image(image_path, 390, 243)
         if image:
@@ -92,14 +91,14 @@ def create_interface():
             img_label.image = image
             img_label.pack()
 
-    
+
     top_sellers_label = Label(main_frame, text="Top sellers", font=("Arial", 18, "bold"), bg="#1a1a1a", fg="white")
     top_sellers_label.pack(anchor="w", padx=20, pady=(20, 0))
 
     top_sellers_frame = tk.Frame(main_frame, bg="#1a1a1a")
     top_sellers_frame.pack(anchor="w", padx=20, pady=10)
 
-    
+
     top_sellers_images = [
         "imagens/lords.jpg",
         "imagens/fc_25.png",

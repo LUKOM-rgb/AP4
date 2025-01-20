@@ -87,7 +87,7 @@ stars = []
 with open(f"jogos/{jogo_name}/data.txt", "r", encoding="utf-8") as file:
     lines = file.readlines()
     if len(lines) > 1:
-        rating = float(lines[1].strip())
+        rating = float(lines[0].strip())
 
         full_stars = int(rating)
         half_star = 1 if rating - full_stars >= 0.5 else 0
@@ -111,8 +111,8 @@ description_title = Label(right_frame, text="Descrição", font=("Inter", 16), b
 description_title.pack(anchor="w")
 
 description_text = Text(right_frame, height=15, width=70, bg="#2C2C2C", fg="white", wrap="word")
-with open(f"jogos/{jogo_name}/data.txt", "r", encoding="utf-8") as file:
-    description_text.insert("1.0", file.readline().strip())
+with open(f"jogos/{jogo_name}/descricao.txt", "r", encoding="utf-8") as file:
+    description_text.insert("1.0", file.read())
 description_text.config(state="disabled")
 description_text.pack()
 
