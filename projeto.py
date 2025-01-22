@@ -37,7 +37,7 @@ class jogostoreApp:
         # Lista de desejos
         self.lista = []
         self.carregar_lista_desejos()
-        
+
         # Dados dos jogos, incluindo os caminhos das capas
         self.jogos_data = []
         caminho_base = "jogos"
@@ -600,7 +600,7 @@ class jogostoreApp:
 
     def salvar_lista_desejos(self):
         try:
-            with open("lista_desejos.txt", "w", encoding="utf-8") as file:
+            with open(f"lista_desejos_{user_data[0]}.txt", "w", encoding="utf-8") as file:
                 for jogo in self.lista:
                     file.write(f"{jogo}\n")
         except Exception as e:
@@ -608,7 +608,7 @@ class jogostoreApp:
 
     def carregar_lista_desejos(self):
         try:
-            with open("lista_desejos.txt", "r", encoding="utf-8") as file:
+            with open(f"lista_desejos_{user_data[0]}.txt", "r", encoding="utf-8") as file:
                 self.lista = [line.strip() for line in file.readlines()]
         except FileNotFoundError:
             self.lista = []
