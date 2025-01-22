@@ -1,12 +1,12 @@
-import tkinter as tk
-from tkinter import Button, Label, Menu
+import tkinter as tk 
+from tkinter import Button, Label, Menu, Canvas, Scrollbar, Frame
 from PIL import Image, ImageTk  # Importar Pillow
 import subprocess
 
 def create_interface():
     root = tk.Tk()
     root.title("Game Store")
-    root.geometry("1920x1080")
+    root.geometry("1440x1032")
     root.configure(bg="#1a1a1a")
 
     # Barra de Menu
@@ -59,15 +59,29 @@ def create_interface():
 
     barra_menu()
 
+    # Configuração do canvas e scrollbar
+    canvas = Canvas(root, bg="#1a1a1a")
+    scrollbar = Scrollbar(root, orient="vertical", command=canvas.yview)
+    scrollable_frame = Frame(canvas, bg="#1a1a1a")
 
-    main_frame = tk.Frame(root, bg="#1a1a1a")
-    main_frame.pack(side="left", fill="both", expand=True)
+    scrollable_frame.bind(
+        "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+    )
 
+    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
+
+    # Main Frame dentro do canvas
+    main_frame = Frame(scrollable_frame, bg="#1a1a1a")
+    main_frame.pack(side="top", fill="both", expand=True)
 
     trending_label = Label(main_frame, text="Trending", font=("Arial", 18, "bold"), bg="#1a1a1a", fg="white")
     trending_label.pack(anchor="w", padx=20, pady=(10, 0))
 
-    trending_frame = tk.Frame(main_frame, bg="#1a1a1a")
+    trending_frame = Frame(main_frame, bg="#1a1a1a")
     trending_frame.pack(anchor="w", padx=20, pady=10)
 
     # Função para redimensionar imagens
@@ -81,11 +95,11 @@ def create_interface():
             return None
 
     
-    trending_images = ["imagens/gta6.jpg", "imagens/banner2.jpg", "imagens/banner.png"]
+    trending_images = ["imagens/ghost_2.png", "imagens/gta6.jpg", "imagens/littlenightmares3.jpg"]
     for image_path in trending_images:
-        image = load_image(image_path, 390, 243)
+        image = load_image(image_path, 399, 245)
         if image:
-            trending_item = tk.Frame(trending_frame, bg="#1a1a1a", width=200, height=150)
+            trending_item = Frame(trending_frame, bg="#1a1a1a", width=200, height=150)
             trending_item.pack(side="left", padx=10)
 
             img_label = Label(trending_item, image=image, bg="#1a1a1a")
@@ -96,7 +110,7 @@ def create_interface():
     top_sellers_label = Label(main_frame, text="Top sellers", font=("Arial", 18, "bold"), bg="#1a1a1a", fg="white")
     top_sellers_label.pack(anchor="w", padx=20, pady=(20, 0))
 
-    top_sellers_frame = tk.Frame(main_frame, bg="#1a1a1a")
+    top_sellers_frame = Frame(main_frame, bg="#1a1a1a")
     top_sellers_frame.pack(anchor="w", padx=20, pady=10)
 
 
@@ -111,7 +125,7 @@ def create_interface():
     for image_path in top_sellers_images:
         image = load_image(image_path, 230, 341)
         if image:
-            seller_item = tk.Frame(top_sellers_frame, bg="#1a1a1a", width=150, height=200)
+            seller_item = Frame(top_sellers_frame, bg="#1a1a1a", width=230, height=341)
             seller_item.pack(side="left", padx=10)
 
             img_label = Label(seller_item, image=image, bg="#1a1a1a")
@@ -119,6 +133,33 @@ def create_interface():
             img_label.pack()
 
             Button(seller_item, text="Lista de Desejos", bg="#E6C614", fg="#FFFFFF",activebackground="#776500").pack(pady=5)
+
+    # Categorias adicionais
+    categories = [
+        {"name": "Ação", "images": ["imagens/cod.jpg", "imagens/delta.jpg","imagens/mk11.png","imagens/reddead.png","imagens/reddead2.jpg"]},
+        {"name": "Aventura", "images": ["imagens/darksouls.jpg", "imagens/Fantasy.png","imagens/subnautica.jpg","imagens/uncharted4.jpg","imagens/tomb_raider.jpg"]},
+        {"name": "Simulação", "images": ["imagens/euro_truck.jpg", "imagens/farming_simulador.jpg","imagens/Planet_Zoo.jpg","imagens/Spore.jpg","imagens/house_fliper.jpg"]},
+        {"name": "Desporto", "images": ["imagens/Dakar_18.png", "imagens/Descenders.jpg","imagens/Football_Manager.jpg","imagens/NBA.jpg","imagens/pes.jpg"]},
+    ]
+
+    for category in categories:
+        category_label = Label(main_frame, text=category["name"], font=("Arial", 18, "bold"), bg="#1a1a1a", fg="white")
+        category_label.pack(anchor="w", padx=20, pady=(20, 0))
+
+        category_frame = Frame(main_frame, bg="#1a1a1a")
+        category_frame.pack(anchor="w", padx=20, pady=10)
+
+        for image_path in category["images"]:
+            image = load_image(image_path, 230, 341)
+            if image:
+                category_item = Frame(category_frame, bg="#1a1a1a", width=150, height=200)
+                category_item.pack(side="left", padx=10)
+
+                img_label = Label(category_item, image=image, bg="#1a1a1a")
+                img_label.image = image
+                img_label.pack()
+
+                Button(category_item, text="Lista de Desejos", bg="#E6C614", fg="#FFFFFF",activebackground="#776500").pack(pady=5)
 
     root.mainloop()
 
