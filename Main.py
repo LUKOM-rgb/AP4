@@ -1,7 +1,35 @@
-import tkinter as tk 
-from tkinter import Button, Label, Menu, Canvas, Scrollbar, Frame
-from PIL import Image, ImageTk  # Importar Pillow
+import tkinter as tk
+from tkinter import Button, Label, Menu, Canvas, Scrollbar, Frame, messagebox
+from PIL import Image, ImageTk  # Import Pillow
+import os
 import subprocess
+from notifypy import Notify
+import sys
+
+def main():
+    categoria = sys.argv[1] if len(sys.argv) > 1 else None
+    # Lógica para exibir a categoria específica
+    if categoria:
+        print(f"Exibindo jogos da categoria: {categoria}")
+        # Adicione aqui a lógica para mostrar os jogos dessa categoria
+
+
+def mostrar_notificacao(categoria):
+    notification = Notify()
+    notification.title = "Mais Jogos Disponíveis!"
+    notification.message = f"Existem mais jogos na categoria: {categoria}. Clique para ver."
+    notification.icon_path = "caminho/para/o/icon.png"  # Substitua pelo caminho do seu ícone
+    notification.send()
+
+    # Quando a notificação é clicada, chama a função para abrir a main.py
+    notification.bind("<Button-1>", lambda e: abrir_main(categoria))
+
+def abrir_main(categoria):
+    # Aqui você pode adicionar a lógica para abrir a main.py
+    subprocess.Popen(["python", "main.py", categoria])  # Passa a categoria como argumento
+
+
+
 
 def create_interface():
     root = tk.Tk()
@@ -9,57 +37,54 @@ def create_interface():
     root.geometry("1440x1032")
     root.configure(bg="#1a1a1a")
 
-    # Barra de Menu
+    # Menu bar
     def barra_menu():
-        menu_bar = Menu(root, bg="#E6C614", fg="#FFFFFF")  # Cor de fundo e texto
-
-        # Menu Arquivo
-        file_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF",activebackground="#776500")
+        menu_bar = Menu(root, bg="#E6C614", fg="#FFFFFF")
+    
+        # File Menu
+        file_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF", activebackground="#776500")
         file_menu.add_command(label="Sign up", command=open_create_account)
-        file_menu.add_command(label="Filtro", command=home)
+        file_menu.add_command(label="Filtro", command=filtro)
         file_menu.add_separator()
         file_menu.add_command(label="Sair", command=root.quit)
         menu_bar.add_cascade(label="Arquivo", menu=file_menu)
 
-        # Menu Ajuda
-        help_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF",activebackground="#776500")
+        # Help Menu
+        help_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF", activebackground="#776500")
         help_menu.add_command(label="Utilizador", command=utilizador)
         help_menu.add_command(label="Sobre", command=sobre)
         menu_bar.add_cascade(label="Definições", menu=help_menu)
 
-        # Adicionar a barra de menus na janela principal
         root.config(menu=menu_bar)
 
-    # Função para abrir a página de cadastro
+    # Open create account page
     def open_create_account():
         try:
             subprocess.Popen(["python", "login.py"])
         except FileNotFoundError:
-            print("Erro ao abrir o arquivo 'login.py'")
+            messagebox.showerror("Erro", "O ficheiro 'login.py' não foi encontrado!")
 
-    # Função para voltar para a home
-    def home():
+    # Go back to filtro
+    def filtro():
         try:
             subprocess.Popen(["python", "projeto.py"])
             root.destroy()
         except FileNotFoundError:
             print("Erro ao abrir o arquivo 'projeto.py'")
 
-    # Função para exibir o sobre
+    # Show about
     def sobre():
         print("Sobre a aplicação Game Store")
 
     def utilizador():
         try:
             subprocess.Popen(["python", "settings.py"])
-            root.destroy()
         except FileNotFoundError:
             print("Erro ao abrir o arquivo 'settings.py'")
 
-
     barra_menu()
 
-    # Configuração do canvas e scrollbar
+    # Canvas and scrollbar setup
     canvas = Canvas(root, bg="#1a1a1a")
     scrollbar = Scrollbar(root, orient="vertical", command=canvas.yview)
     scrollable_frame = Frame(canvas, bg="#1a1a1a")
@@ -74,7 +99,7 @@ def create_interface():
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
 
-    # Main Frame dentro do canvas
+    # Main Frame inside the canvas
     main_frame = Frame(scrollable_frame, bg="#1a1a1a")
     main_frame.pack(side="top", fill="both", expand=True)
 
@@ -84,17 +109,16 @@ def create_interface():
     trending_frame = Frame(main_frame, bg="#1a1a1a")
     trending_frame.pack(anchor="w", padx=20, pady=10)
 
-    # Função para redimensionar imagens
+    # Function to load and resize images
     def load_image(image_path, width, height):
         try:
             image = Image.open(image_path)
-            image = image.resize((width, height), Image.LANCZOS)  # Usando LANCZOS
+            image = image.resize((width, height), Image.LANCZOS)
             return ImageTk.PhotoImage(image)
         except Exception as e:
             print(f"Erro ao carregar a imagem {image_path}: {e}")
             return None
 
-    
     trending_images = ["imagens/ghost_2.png", "imagens/gta6.jpg", "imagens/littlenightmares3.jpg"]
     for image_path in trending_images:
         image = load_image(image_path, 399, 245)
@@ -106,6 +130,8 @@ def create_interface():
             img_label.image = image
             img_label.pack()
 
+            # Bind click event to the image
+            img_label.bind("<Button-1>", lambda e, name=os.path.splitext(os.path.basename(image_path))[0]: abrir_jogo(name))
 
     top_sellers_label = Label(main_frame, text="Top sellers", font=("Arial", 18, "bold"), bg="#1a1a1a", fg="white")
     top_sellers_label.pack(anchor="w", padx=20, pady=(20, 0))
@@ -113,13 +139,12 @@ def create_interface():
     top_sellers_frame = Frame(main_frame, bg="#1a1a1a")
     top_sellers_frame.pack(anchor="w", padx=20, pady=10)
 
-
     top_sellers_images = [
-        "jogos\Manor Lords\imagem.jpg",
-        "jogos\EAFC 25\imagem.png",
-        "jogos\Bus Simulator 21\imagem.jpg",
-        "jogos\Minecraft\imagem.jpeg",
-        "jogos\Rainbow Six Siege\imagem.jpg",
+        "jogos/Manor Lords/imagem.jpg",
+        "jogos/EAFC 25/imagem.png",
+        "jogos/Bus Simulator 21/imagem.jpg",
+        "jogos/Minecraft/imagem.jpeg",
+        "jogos/Rainbow Six Siege/imagem.jpg",
     ]
 
     for image_path in top_sellers_images:
@@ -132,14 +157,15 @@ def create_interface():
             img_label.image = image
             img_label.pack()
 
-            Button(seller_item, text="Lista de Desejos", bg="#E6C614", fg="#FFFFFF",activebackground="#776500").pack(pady=5)
+            # Bind click event to the image
+            img_label.bind("<Button-1>", lambda e, name=os.path.splitext(os.path.basename(image_path))[0]: abrir_jogo(name))
 
-    # Categorias adicionais
+    # Additional categories
     categories = [
-        {"name": "Ação", "images": ["imagens/cod.jpg", "imagens/delta.jpg","imagens/mk11.png","imagens/reddead.png","imagens/reddead2.jpg"]},
-        {"name": "Aventura", "images": ["imagens/darksouls.jpg", "imagens/Fantasy.png","imagens/subnautica.jpg","imagens/uncharted4.jpg","imagens/tomb_raider.jpg"]},
-        {"name": "Simulação", "images": ["imagens/euro_truck.jpg", "imagens/farming_simulador.jpg","imagens/Planet_Zoo.jpg","imagens/Spore.jpg","imagens/house_fliper.jpg"]},
-        {"name": "Desporto", "images": ["imagens/Dakar_18.png", "imagens/Descenders.jpg","imagens/Football_Manager.jpg","imagens/NBA.jpg","imagens/pes.jpg"]},
+        {"name": "Ação", "images": ["imagens/cod.jpg", "imagens/delta.jpg", "imagens/mk11.png", "imagens/reddead.png", "imagens/reddead2.jpg"]},
+        {"name": "Aventura", "images": ["imagens/darksouls.jpg", "imagens/Fantasy.png", "imagens/subnautica.jpg", "imagens/uncharted4.jpg", "imagens/tomb_raider.jpg"]},
+        {"name": "Simulação", "images": ["imagens/euro_truck.jpg", "imagens/farming_simulador.jpg", "imagens/Planet_Zoo.jpg", "imagens/Spore.jpg", "imagens/house_fliper.jpg"]},
+        {"name": "Desporto", "images": ["imagens/Dakar_18.png", "imagens/Descenders.jpg", "imagens/Football_Manager.jpg", "imagens/NBA.jpg", "imagens/pes.jpg"]},
     ]
 
     for category in categories:
@@ -159,7 +185,18 @@ def create_interface():
                 img_label.image = image
                 img_label.pack()
 
-                Button(category_item, text="Lista de Desejos", bg="#E6C614", fg="#FFFFFF",activebackground="#776500").pack(pady=5)
+                # Assuming the game name is derived from the image path
+                jogo_name = os.path.splitext(os.path.basename(image_path))[0]  # Get the game name from the image path
+                img_label.bind("<Button-1>", lambda e, name=jogo_name: abrir_jogo(name))
+
+    def abrir_jogo(jogo_name):  # Open game function
+        print(f"A abrir: {jogo_name}")  # Debug print
+        # Here you would call the game opening logic
+        game_file = f"jogos/{jogo_name}.py"
+        if os.path.exists(game_file):
+            subprocess.Popen(["python", game_file])  # Open the corresponding python file
+        else:
+            messagebox.showerror("Erro", f"O jogo \"{jogo_name}\" não existe!")
 
     root.mainloop()
 

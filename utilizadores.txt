@@ -1,3 +1,4 @@
 admin|admin@teste.pt|1|1|2001|12345|admin
 a|b@teste.pt|1|1|2001|e|utilizador
 teste|teste@gmail.com|1|1|2001|123|utilizador
+Lukinhas|Lukinhas@sapo.pt|13|12|2005|Lukinhas1325|utilizador
