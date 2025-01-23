@@ -23,13 +23,30 @@ def adicionar_review(jogo_name):
             # Guardar a avaliação no arquivo de reviews
             with open(f"jogos/{jogo_name}/reviews.txt", "a", encoding="utf-8") as file:
                 file.write(f"{user_data[0]};{review_text}\n")  # user_data[0] é o nome do utilizador
-            messagebox.showinfo("Sucesso", "avaliação adicionada com sucesso!")
+            messagebox.showinfo("Sucesso", "Avaliação adicionada com sucesso!")
+            atualizar_ratings()  # Atualizar a exibição das reviews
             review_window.destroy()
         else:
             messagebox.showerror("Erro", "A avaliação não pode estar vazia ou não tem sessão iniciada.")
 
     button_guardar = tk.Button(review_window, text="Guardar avaliação", command=guardar_review, bg="#E6C614" ,activebackground="#776500")
     button_guardar.pack(pady=20)
+
+def atualizar_estrelas():
+    try:
+        # Ler as avaliações do arquivo
+        with open(f"jogos/{jogo_name}/estrelas.txt", "r", encoding="utf-8") as file:
+            numbers = [float(line.strip()) for line in file if line.strip().isdigit() or line.strip().replace('.', '', 1).isdigit()]
+        if numbers:
+            # Calcular a média
+            rating = round((sum(numbers) / len(numbers)), 1)
+        else:
+            rating = 0  # Caso não haja avaliações no arquivo
+    except FileNotFoundError:
+        rating = 0  # Caso o arquivo não exista
+
+    # Atualizar o label do rating na interface
+    rating_label.config(text=f"{rating} / 5 ★")
 
 # Ler de projeto.py
 if len(sys.argv) > 1:
@@ -79,29 +96,64 @@ else:
 canvas.pack()
 
 # Avaliação
+def adicionar_estrelas():
+    estrelas_window = tk.Toplevel()
+    estrelas_window.title(f"Adicionar avaliação numérica para {jogo_name}")
+    estrelas_window.geometry("400x200")
+    estrelas_window.configure(bg="#2C2C2C")
+
+    label = tk.Label(estrelas_window, text="Introduza uma avaliação de 0 a 5:", fg="#E6C614", bg="#2C2C2C")
+    label.pack(pady=10)
+
+    entry_estrelas = tk.Entry(estrelas_window, width=5)
+    entry_estrelas.pack(pady=10)
+
+    def guardar_estrelas():
+        try:
+            estrelas = float(entry_estrelas.get())
+            if 0 <= estrelas <= 5:
+                # Salvar no arquivo de estrelas
+                with open(f"jogos/{jogo_name}/estrelas.txt", "a", encoding="utf-8") as file:
+                    file.write(f"{estrelas}\n")
+                messagebox.showinfo("Sucesso", "Avaliação numérica adicionada com sucesso!")
+                atualizar_estrelas()  # Atualizar o rating exibido na interface
+                estrelas_window.destroy()
+            else:
+                messagebox.showerror("Erro", "A avaliação deve ser entre 0 e 5.")
+        except ValueError:
+            messagebox.showerror("Erro", "Introduza um valor numérico válido.")
+
+    button_guardar = tk.Button(estrelas_window, text="Guardar avaliação", command=guardar_estrelas, bg="#E6C614", activebackground="#776500")
+    button_guardar.pack(pady=20)
+
 rating_frame = Frame(left_frame, bg="#2C2C2C")
 rating_frame.pack(pady=10)
 
 stars = []
 
-with open(f"jogos/{jogo_name}/data.txt", "r", encoding="utf-8") as file:
-    lines = file.readlines()
-    if len(lines) > 1:
-        rating = float(lines[0].strip())
+with open(f"jogos/{jogo_name}/estrelas.txt", "r", encoding="utf-8") as file:
+    numbers = [float(line.strip()) for line in file if line.strip().isdigit() or line.strip().replace('.', '', 1).isdigit()]
+    if numbers:  # Check if the list of numbers is empty
+                rating = round((sum(numbers) / len(numbers)),1)  # Calculate and return the average
+print(f"a rating é {rating}")
 
-        full_stars = int(rating)
-        half_star = 1 if rating - full_stars >= 0.5 else 0
-        empty_stars = 5 - full_stars - half_star
+add_stars_button = Button(main_frame, text="Adicionar avaliação numérica", bg="#E6C614", fg="#FFFFFF", activebackground="#776500", command=adicionar_estrelas)
+add_stars_button.grid(row=4, column=0, sticky="w", pady=10)
 
-        stars.extend(["★"] * full_stars)
-        if half_star: stars.append("⯨")
-        stars.extend(["☆"] * empty_stars)
-for star in stars:
-    star_label = Label(rating_frame, text=star, font=("Inter", 20), bg="#2C2C2C", fg="yellow")
-    star_label.pack(side="left")
-
-rating_label = Label(rating_frame, text=f"{rating} / 5", font=("Inter", 20), bg="#2C2C2C", fg="white")
+rating_label = Label(rating_frame, text="", font=("Inter", 20), bg="#2C2C2C", fg="white")
 rating_label.pack(side="left", padx=10)
+atualizar_estrelas()  # Inicializa o rating ao carregar o programa
+
+def atualizar_ratings():
+    # Limpar o frame de ratings antes de recarregar
+    for widget in rating_frame.winfo_children():
+        widget.destroy()
+
+    # Recarregar e mostrar as ratings
+    ratings = adicionar_estrelas(f"jogos/{jogo_name}/estrelas.txt")
+    for avaliação in ratings:
+        rating_frame = tk.Label(rating_frame, text=avaliação, font=("Inter", 12), bg="#2C2C2C", fg="white", anchor="w")
+        rating_frame.pack(anchor="w", pady=2)
 
 # Seção da direita (Descrição)
 right_frame = Frame(main_frame, bg="#2C2C2C")
@@ -138,6 +190,7 @@ def carregar_reviews(arquivo):
     except FileNotFoundError:
         reviews_list.append("Erro: Arquivo de reviews não encontrado.")
     return reviews_list
+
 
 reviews = carregar_reviews(f"jogos/{jogo_name}/reviews.txt")
 for avaliação in reviews:

@@ -74,29 +74,6 @@ class jogostoreApp:
                     except Exception as e:
                         print(f"Erro ao processar '{data_file}': {e}")
 
-        """self.jogos_data = [
-            {"name": "Grand Theft Auto V", "Género": "Ação", "Capa": "jogos/Grand Theft Auto V/imagem.png"},
-            {"name": "The Crew", "Género": "Simulação", "Capa": "jogos/The Crew/imagem.jpg"},
-            {"name": "Grand Theft Auto VI", "Género": "Ação", "Capa": "jogos/Grand Theft Auto VI/imagem.jpg"},
-            {"name": "Manor Lords", "Género": "Simulação", "Capa": "jogos/Manor Lords/imagem.jpg"},
-            {"name": "EAFC 25", "Género": "Desporto", "Capa": "jogos/EAFC 25/imagem.png"},
-            {"name": "Bus Simulator 21", "Género": "Simulação", "Capa": "jogos/Bus Simulator 21/imagem.jpg"},
-            {"name": "Minecraft", "Género": "Aventura", "Capa": "jogos/Minecraft/imagem.jpeg"},
-            {"name": "Rainbow Six Siege", "Género": "Ação", "Capa": "jogos/Rainbow Six Siege/imagem.jpg"}
-        ]
-
-        # Descrição
-        self.dicas_descr = {
-            "Grand Theft Auto V": "Explore a cidade de Los Santos e complete missões emocionantes.",
-            "The Crew": "Junte-se a outros jogadores e participe de corridas num mundo aberto.",
-            "Grand Theft Auto VI": "BREVEMENTE",
-            "Manor Lords": "Construa e gerencie a sua própria cidade medieval.",
-            "EAFC 25": "Participe de partidas emocionantes e conquiste o campeonato.",
-            "Bus Simulator 21": "Conduza um autocarro numa cidade realista e cumpra horários.",
-            "Minecraft": "Explore, construa e sobreviva num mundo de blocos.",
-            "Rainbow Six Siege": "Participe de intensas batalhas táticas em equipa."
-        }"""
-
         inter_font = get_font("Inter", size=12)
 
         self.barra_menu()
