@@ -40,7 +40,7 @@ def create_interface():
     # Menu bar
     def barra_menu():
         menu_bar = Menu(root, bg="#E6C614", fg="#FFFFFF")
-    
+
         # File Menu
         file_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF", activebackground="#776500")
         file_menu.add_command(label="Sign up", command=open_create_account)
@@ -119,7 +119,10 @@ def create_interface():
             print(f"Erro ao carregar a imagem {image_path}: {e}")
             return None
 
-    trending_images = ["imagens/ghost_2.png", "imagens/gta6.jpg", "imagens/littlenightmares3.jpg"]
+    def criar_bind(img_label, jogo_name):
+            img_label.bind("<Button-1>", lambda e: abrir_jogo(jogo_name))
+
+    trending_images = ["jogos/Ghost of Yotei/imagem.png", "jogos/Grand Theft Auto VI/imagem.jpg", "jogos/Little Nightmares 3/imagem.jpg"]
     for image_path in trending_images:
         image = load_image(image_path, 399, 245)
         if image:
@@ -130,8 +133,8 @@ def create_interface():
             img_label.image = image
             img_label.pack()
 
-            # Bind click event to the image
-            img_label.bind("<Button-1>", lambda e, name=os.path.splitext(os.path.basename(image_path))[0]: abrir_jogo(name))
+            jogo_name = os.path.basename(os.path.dirname(image_path)) # Extrai o nome da pasta
+            criar_bind(img_label, jogo_name) # chama "criar_bind" para ficar correto em cada
 
     top_sellers_label = Label(main_frame, text="Top sellers", font=("Arial", 18, "bold"), bg="#1a1a1a", fg="white")
     top_sellers_label.pack(anchor="w", padx=20, pady=(20, 0))
@@ -157,15 +160,15 @@ def create_interface():
             img_label.image = image
             img_label.pack()
 
-            # Bind click event to the image
-            img_label.bind("<Button-1>", lambda e, name=os.path.splitext(os.path.basename(image_path))[0]: abrir_jogo(name))
+            jogo_name = os.path.basename(os.path.dirname(image_path)) # Extrai o nome da pasta
+            criar_bind(img_label, jogo_name) # chama "criar_bind" para ficar correto em cada
 
     # Additional categories
     categories = [
-        {"name": "Ação", "images": ["imagens/cod.jpg", "imagens/delta.jpg", "imagens/mk11.png", "imagens/reddead.png", "imagens/reddead2.jpg"]},
-        {"name": "Aventura", "images": ["imagens/darksouls.jpg", "imagens/Fantasy.png", "imagens/subnautica.jpg", "imagens/uncharted4.jpg", "imagens/tomb_raider.jpg"]},
-        {"name": "Simulação", "images": ["imagens/euro_truck.jpg", "imagens/farming_simulador.jpg", "imagens/Planet_Zoo.jpg", "imagens/Spore.jpg", "imagens/house_fliper.jpg"]},
-        {"name": "Desporto", "images": ["imagens/Dakar_18.png", "imagens/Descenders.jpg", "imagens/Football_Manager.jpg", "imagens/NBA.jpg", "imagens/pes.jpg"]},
+        {"name": "Ação", "images": ["jogos/Call of Duty Ghosts/imagem.jpg", "jogos/Delta Force/imagem.jpg", "jogos/Mortal Kombat 11/imagem.png", "jogos/Red Dead Redemption/imagem.png", "jogos/Red Dead Redemption 2/imagem.jpg"]},
+        {"name": "Aventura", "images": ["jogos/Dark Souls/imagem.jpg", "jogos/Final Fantasy 8/imagem.png", "jogos/Subnautica/imagem.jpg", "jogos/Uncharted 4/imagem.jpg", "jogos/Tomb Raider/imagem.jpg"]},
+        {"name": "Simulação", "images": ["jogos/Euro Truck Simulator 2/imagem.jpg", "jogos/Farming Simulator 25/imagem.jpg", "jogos/Planet Zoo/imagem.jpg", "jogos/Spore/imagem.jpg", "jogos/House Flipper 2/imagem.jpg"]},
+        {"name": "Desporto", "images": ["jogos/Dakar/imagem.png", "jogos/Descenders/imagem.jpg", "jogos/Football Manager 23/imagem.jpg", "jogos/NBA2K22/imagem.jpg", "jogos/PES2008/imagem.jpg"]},
     ]
 
     for category in categories:
@@ -185,11 +188,10 @@ def create_interface():
                 img_label.image = image
                 img_label.pack()
 
-                
-                jogo_name = os.path.splitext(os.path.basename(image_path))[0]
-                img_label.bind("<Button-1>", lambda e, name=jogo_name: abrir_jogo(name))
+                jogo_name = os.path.basename(os.path.dirname(image_path)) # Extrai o nome da pasta
+                criar_bind(img_label, jogo_name) # chama "criar_bind" para ficar correto em cada
 
-    def abrir_jogo(jogo_name):  
+    def abrir_jogo(jogo_name):
         print(f"A abrir: {jogo_name}")
         if os.path.exists(f"jogos/{jogo_name}"):
             subprocess.Popen(["python", "jogo.py", jogo_name])
