@@ -95,6 +95,9 @@ class jogostoreApp:
         # Botão para abrir lista de desejos
         Button(self.filter_frame, text="Lista de Desejos", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF",activebackground="#776500",
                command=self.abrir_lista).pack(fill=tk.X, pady=20)
+        
+        Button(self.filter_frame, text="Ordenar por Avaliação", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF", activebackground="#776500",
+            command=self.ordenar_jogos_por_avaliacao).pack(fill=tk.X, pady=20)
 
         # Botão para abrir dicas
         Button(self.filter_frame, text="Dicas", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF",activebackground="#776500",
@@ -206,8 +209,12 @@ class jogostoreApp:
                 command=lambda: self.abrir_jogo(jogo["name"])).pack(pady=5)
 
         Label(card_frame, text=f"Género: {jogo['Género']}", font=("Helvetica", 10), bg="white").pack(pady=5)
+        # Botão para ordenar jogos por avaliação
+        
 
         Button(card_frame, text="Lista de Desejos",bg="#E6C614",fg="#FFFFFF", activebackground="#776500",command=lambda g=jogo["name"]: self.adicionar_lista(g)).pack(pady=5)
+
+        
 
     def ver_dicas(self, jogo_name):
         # Criar a janela de dicas
@@ -616,6 +623,38 @@ class jogostoreApp:
             Filtro_jogos = [jogo for jogo in self.jogos_data if jogo["Género"] == Género]
 
         self.display_jogos(Filtro_jogos)
+    def ordenar_jogos_por_avaliacao(self):
+        # Dicionário para armazenar as avaliações
+        avaliacoes = {}
+
+    # Caminho base para os jogos
+        caminho_base = "jogos"
+
+        for pasta in os.listdir(caminho_base):
+            pasta_caminho = os.path.join(caminho_base, pasta)
+        
+        # Verificar se é uma pasta
+            if os.path.isdir(pasta_caminho):
+            #Caminho do ficheiro "estrelas.txt" dentro da pasta
+                estrelas_file = os.path.join(pasta_caminho, "estrelas.txt")
+
+                # Verificar se "estrelas.txt" existe
+                if os.path.exists(estrelas_file):
+                    try:
+                        with open(estrelas_file, "r", encoding="utf-8") as file:
+                        # Ler as avaliações e calcular a média
+                            avaliacoes_jogo = [int(line.strip()) for line in file.readlines() if line.strip().isdigit()]
+                            if avaliacoes_jogo:
+                                media_avaliacao = sum(avaliacoes_jogo) / len(avaliacoes_jogo)
+                                avaliacoes[pasta] = media_avaliacao
+                    except Exception as e:
+                        print(f"Erro ao processar '{estrelas_file}': {e}")
+
+        # Ordenar os jogos pela média das avaliações
+        jogos_ordenados = sorted(self.jogos_data, key=lambda x: avaliacoes.get(x["name"], 0), reverse=True)
+
+        # Atualizar a exibição de jogos
+        self.display_jogos(jogos_ordenados)
 
 if __name__ == "__main__":
     root = tk.Tk()
