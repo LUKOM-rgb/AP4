@@ -185,18 +185,20 @@ def create_interface():
                 img_label.image = image
                 img_label.pack()
 
-                # Assuming the game name is derived from the image path
-                jogo_name = os.path.splitext(os.path.basename(image_path))[0]  # Get the game name from the image path
+                
+                jogo_name = os.path.splitext(os.path.basename(image_path))[0]
                 img_label.bind("<Button-1>", lambda e, name=jogo_name: abrir_jogo(name))
 
-    def abrir_jogo(jogo_name):  # Open game function
-        print(f"A abrir: {jogo_name}")  # Debug print
-        # Here you would call the game opening logic
-        game_file = f"jogos/{jogo_name}.py"
-        if os.path.exists(game_file):
-            subprocess.Popen(["python", game_file])  # Open the corresponding python file
+    def abrir_jogo(jogo_name):  
+        print(f"A abrir: {jogo_name}")
+        if os.path.exists(f"jogos/{jogo_name}"):
+            subprocess.Popen(["python", "jogo.py", jogo_name])
         else:
-            messagebox.showerror("Erro", f"O jogo \"{jogo_name}\" não existe!")
+            messagebox.showerror(
+                "Erro",
+             f"O jogo \"{jogo_name}\" não existe!"
+        )
+
 
     root.mainloop()
 
