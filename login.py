@@ -1,11 +1,14 @@
+import tkinter as tk
 from customtkinter import *
 from tkinter import messagebox
+from PIL import Image, ImageTk  # Import Pillow
 import subprocess
 
 app = CTk()
 app.geometry("500x350")
 app.title("OLÁ GAMER")
 app.configure(fg_color="#2C2C2C")
+app.iconphoto(False,tk.PhotoImage(file="favicon.png"))
 
 # Criar os labels
 label_title = CTkLabel(app, text="OLÁ GAMER", font=("Inter", 30), text_color="white")
@@ -27,7 +30,6 @@ entry_password.pack(pady=5)  # Adiciona o entry à interface
 def login():
     username = entry_username.get()
     password = entry_password.get()
-
     try:
         with open("utilizadores.txt", "r", encoding="utf-8") as file:
             dados = file.readlines()

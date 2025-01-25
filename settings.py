@@ -1,5 +1,7 @@
 from customtkinter import *
 from tkinter import messagebox
+import tkinter as tk
+from PIL import Image, ImageTk
 import os
 from tkinter import font
 
@@ -7,6 +9,9 @@ app = CTk()
 app.geometry("900x550")
 app.title("Settings")
 app.configure(fg_color="#2C2C2C")
+img = Image.open("favicon.png")  # Abre a imagem
+photo = ImageTk.PhotoImage(img)
+app.iconphoto(False, photo)  # Define o ícone da janela
 
 def get_font(family, size=12, weight="normal"):
     available_fonts = font.families()
@@ -19,6 +24,7 @@ def mudar_email():
     popup.geometry("400x300")
     popup.title("Alterar E-mail")
     popup.configure(fg_color="#2C2C2C")
+    popup.iconphoto(False,tk.PhotoImage(file="favicon.png"))
 
     def save_new_email():
         global user_data  # Para acessar a variável global user_data
@@ -79,6 +85,7 @@ def mudar_senha():
     popup.geometry("400x350")
     popup.title("Alterar Senha")
     popup.configure(fg_color="#2C2C2C")
+    popup.iconphoto(False,tk.PhotoImage(file="favicon.png"))
 
     def save_new_password():
         global user_data  # Torna user_data acessível dentro desta função

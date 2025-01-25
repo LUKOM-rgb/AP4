@@ -33,6 +33,7 @@ class jogostoreApp:
         self.root.title("Games Store")
         self.root.geometry("1920x1080")
         self.root.configure(bg="#2C2C2C")
+        self.root.iconphoto(False,tk.PhotoImage(file="favicon.png"))
 
         # Lista de desejos
         self.lista = []
@@ -95,7 +96,7 @@ class jogostoreApp:
         # Botão para abrir lista de desejos
         Button(self.filter_frame, text="Lista de Desejos", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF",activebackground="#776500",
                command=self.abrir_lista).pack(fill=tk.X, pady=20)
-        
+
         Button(self.filter_frame, text="Ordenar por Avaliação", font=("Inter", 12, "bold"), bg="#E6C614", fg="#FFFFFF", activebackground="#776500",
             command=self.ordenar_jogos_por_avaliacao).pack(fill=tk.X, pady=20)
 
@@ -115,25 +116,37 @@ class jogostoreApp:
         self.display_jogos(self.jogos_data)
 
     def barra_menu(self):
-    # Criar barra de menus com cor personalizada
+        # Criar barra de menus com cor personalizada
         self.menu_bar = Menu(self.root, bg="#E6C614", fg="#FFFFFF")  # Cor de fundo e texto
 
-    # Menu Principal
-        file_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF",activebackground="#776500",)  # Cor personalizada para o submenu
+        # Menu Principal
+        file_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF", activebackground="#776500")  # Cor personalizada para o submenu
 
-        file_menu.add_command(label="Sign up", command=self.open_create_account)
+        # Verificar se uma conta está logada
+        try:
+            with open("logged_as.txt", "r", encoding="utf-8") as file:
+                dados = file.readlines()
+                if dados:
+                    user_data = dados[0].strip().split("|")
+                    username = user_data[0]  # Nome do utilizador logado
+                    file_menu.add_command(label=f"Login como: {username}", state="disabled")  # Exibir nome do utilizador
+                else:
+                    file_menu.add_command(label="Sign up", command=self.open_create_account)
+        except FileNotFoundError:
+            file_menu.add_command(label="Sign up", command=self.open_create_account)
+
         file_menu.add_command(label="Home", command=self.home)
         file_menu.add_separator()
         file_menu.add_command(label="Sair", command=self.root.quit)
         self.menu_bar.add_cascade(label="Principal", menu=file_menu)
 
-    # Menu Definições
-        help_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF",activebackground="#776500",)
+        # Menu Definições
+        help_menu = Menu(self.menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF", activebackground="#776500")
         help_menu.add_command(label="Utilizador", command=self.utilizador)
         help_menu.add_command(label="Sobre", command=self.sobre)
         self.menu_bar.add_cascade(label="Definições", menu=help_menu)
 
-    # Adicionar a barra de menus na janela principal
+        # Adicionar a barra de menus na janela principal
         self.root.config(menu=self.menu_bar)
 
     def open_create_account(self):
@@ -210,11 +223,11 @@ class jogostoreApp:
 
         Label(card_frame, text=f"Género: {jogo['Género']}", font=("Helvetica", 10), bg="white").pack(pady=5)
         # Botão para ordenar jogos por avaliação
-        
+
 
         Button(card_frame, text="Lista de Desejos",bg="#E6C614",fg="#FFFFFF", activebackground="#776500",command=lambda g=jogo["name"]: self.adicionar_lista(g)).pack(pady=5)
 
-        
+
 
     def ver_dicas(self, jogo_name):
         # Criar a janela de dicas
@@ -294,7 +307,7 @@ class jogostoreApp:
             Label(lista_window, text="Nenhum login..?", bg="#2C2C2C", fg="#FFFFFF").pack(pady=5)
 
         # Campo para o nome de jogo
-        Label(lista_window, text="Insira o nome do jogo que deseja adicionar:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=10)
+        Label(lista_window, text=f"{"-" * 100}\nInsira o nome do jogo que deseja adicionar:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=10)
         self.entry_jogo_nome = tk.Entry(lista_window, width=30)
         self.entry_jogo_nome.pack(pady=5)
 
@@ -314,7 +327,7 @@ class jogostoreApp:
         # Botão para adicionar jogo
         Button(lista_window, text="Adicionar Jogo", command=self.adicionar_jogo).pack(pady=10)
 
-        Label(lista_window, text="Escreva o jogo que quer remover:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=10)
+        Label(lista_window, text=f"{"-" * 100}\nEscreva o jogo que quer remover:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=10)
         self.entry_jogo_remover = tk.Entry(lista_window, width=30)
         self.entry_jogo_remover.pack(pady=5)
 
@@ -322,7 +335,7 @@ class jogostoreApp:
         self.removerJogo.pack(pady=10)
 
         # Campo para remover conta
-        Label(lista_window, text=f"{"-" * 70}\nInsira um nome do utilizador:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=5)
+        Label(lista_window, text=f"{"-" * 100}\nInsira um nome do utilizador:", bg="#2C2C2C", fg="#FFFFFF").pack(pady=5)
         self.entry_utilizador_rem = tk.Entry(lista_window, width=30)
         self.entry_utilizador_rem.pack(pady=5)
 
@@ -623,27 +636,29 @@ class jogostoreApp:
             Filtro_jogos = [jogo for jogo in self.jogos_data if jogo["Género"] == Género]
 
         self.display_jogos(Filtro_jogos)
+
+
     def ordenar_jogos_por_avaliacao(self):
         # Dicionário para armazenar as avaliações
         avaliacoes = {}
 
-    # Caminho base para os jogos
+        # Caminho base para os jogos
         caminho_base = "jogos"
 
         for pasta in os.listdir(caminho_base):
             pasta_caminho = os.path.join(caminho_base, pasta)
-        
-        # Verificar se é uma pasta
+
+            # Verificar se é uma pasta
             if os.path.isdir(pasta_caminho):
-            #Caminho do ficheiro "estrelas.txt" dentro da pasta
+                # Caminho do ficheiro "estrelas.txt" dentro da pasta
                 estrelas_file = os.path.join(pasta_caminho, "estrelas.txt")
 
                 # Verificar se "estrelas.txt" existe
                 if os.path.exists(estrelas_file):
                     try:
                         with open(estrelas_file, "r", encoding="utf-8") as file:
-                        # Ler as avaliações e calcular a média
-                            avaliacoes_jogo = [int(line.strip()) for line in file.readlines() if line.strip().isdigit()]
+                            # Ler as avaliações e calcular a média
+                            avaliacoes_jogo = [float(line.strip()) for line in file.readlines() if line.strip().replace('.', '', 1).isdigit()]
                             if avaliacoes_jogo:
                                 media_avaliacao = sum(avaliacoes_jogo) / len(avaliacoes_jogo)
                                 avaliacoes[pasta] = media_avaliacao

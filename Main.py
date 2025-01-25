@@ -36,25 +36,41 @@ def create_interface():
     root.title("Game Store")
     root.geometry("1440x1032")
     root.configure(bg="#1a1a1a")
+    root.iconphoto(False,tk.PhotoImage(file="favicon.png"))
 
     # Menu bar
     def barra_menu():
-        menu_bar = Menu(root, bg="#E6C614", fg="#FFFFFF")
+        # Criar barra de menus com cor personalizada
+        menu_bar = Menu(root, bg="#E6C614", fg="#FFFFFF")  # Cor de fundo e texto
 
-        # File Menu
-        file_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF", activebackground="#776500")
-        file_menu.add_command(label="Sign up", command=open_create_account)
-        file_menu.add_command(label="Filtro", command=filtro)
+        # Menu Principal
+        file_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF", activebackground="#776500")  # Cor personalizada para o submenu
+
+        # Verificar se uma conta está logada
+        try:
+            with open("logged_as.txt", "r", encoding="utf-8") as file:
+                dados = file.readlines()
+                if dados:
+                    user_data = dados[0].strip().split("|")
+                    username = user_data[0]  # Nome do utilizador logado
+                    file_menu.add_command(label=f"Login como: {username}", state="disabled")  # Exibir nome do utilizador
+                else:
+                    file_menu.add_command(label="Sign up", command=open_create_account)
+        except FileNotFoundError:
+            file_menu.add_command(label="Sign up", command=open_create_account)
+
+        file_menu.add_command(label="Home", command=filtro)
         file_menu.add_separator()
         file_menu.add_command(label="Sair", command=root.quit)
-        menu_bar.add_cascade(label="Arquivo", menu=file_menu)
+        menu_bar.add_cascade(label="Principal", menu=file_menu)
 
-        # Help Menu
+        # Menu Definições
         help_menu = Menu(menu_bar, tearoff=0, bg="#E6C614", fg="#FFFFFF", activebackground="#776500")
         help_menu.add_command(label="Utilizador", command=utilizador)
         help_menu.add_command(label="Sobre", command=sobre)
         menu_bar.add_cascade(label="Definições", menu=help_menu)
 
+        # Adicionar a barra de menus na janela principal
         root.config(menu=menu_bar)
 
     # Open create account page

@@ -1,5 +1,7 @@
 from customtkinter import *
 from tkinter import messagebox
+from PIL import Image, ImageTk  # Import Pillow
+import tkinter as tk
 import subprocess
 from tkinter import font
 from datetime import datetime
@@ -9,6 +11,7 @@ app = CTk()
 app.geometry("900x550")
 app.title("OLÁ GAMER")
 app.configure(fg_color="#2C2C2C")
+app.iconphoto(False,tk.PhotoImage(file="favicon.png"))
 
 def get_font(family, size=12, weight="normal"):
     available_fonts = font.families()

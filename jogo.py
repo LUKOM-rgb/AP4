@@ -60,6 +60,7 @@ root = Tk()
 root.title(f"{jogo_name}")
 root.geometry("1920x1080")
 root.configure(bg="#2C2C2C")
+root.iconphoto(False,tk.PhotoImage(file="favicon.png"))
 
 # Frame principal
 main_frame = Frame(root, bg="#2C2C2C")
